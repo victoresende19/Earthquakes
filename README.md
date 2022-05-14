@@ -5,8 +5,6 @@ This repository aims to create a seismological observatory consuming USGS API da
   <img src="http://nesec.org/wp-content/uploads/2017/11/EQ_Diagram-300x166.png" />
 </p>
 
-The suggested architecture for this solution is simple, as shown below. Using python to manipulate the data on ETL (and schedule it with Watson Studio) and insert it into PostgreSQL to make an interactive view with streamlit library.
-
-![image](https://user-images.githubusercontent.com/63743020/168402494-f646dd8e-0fbf-426a-aa88-b11fddcbcb6c.png)
+The suggested architecture for this solution is simple, as shown on the PDF file. Using python to manipulate the data on ETL (and schedule it with Watson Studio) and insert it into PostgreSQL to make an interactive view with streamlit library.
 
 
