@@ -23,16 +23,19 @@ magMinima = 2
 
 # st.sidebar.markdown("<h4 style='text-align: center; color: black;'>Preencha os campos para criar uma visualização dinâmica </h4>",
 # unsafe_allow_html=True)
-startTime = st.sidebar.date_input(
-    "Data de inicio (Ano/ Mês / Dia):", datetime.date(2011, 1, 1))
-endTime = st.sidebar.date_input(
-    "Data final (Ano/ Mês / Dia):", datetime.date(2014, 1, 1))
+startTime = st.sidebar.date_input("Data de inicio (Ano/ Mês / Dia):", datetime.date(2011, 1, 1))
+
+endTime = st.sidebar.date_input("Data final (Ano/ Mês / Dia):", datetime.date(2014, 1, 1))
+
 magnitude_desejada = st.sidebar.slider('Magnitude mínima:', magMinima, 10, 5)
+
 visualizacaoTremor = st.sidebar.selectbox(
     'Tipo de tremor:', ('Terremoto', 'Explosão', 'Explosão Nuclear', 'Explosão de rochas', 'Explosão de pedreira'))
+
 tsunamiFilter = st.sidebar.selectbox('Verificar tsunami:', ('Não', 'Sim'))
-visualizacaoPeriodo = st.sidebar.selectbox(
-    'Visualização por ano:', ('Não', 'Sim'))
+
+visualizacaoPeriodo = st.sidebar.selectbox('Visualização por ano:', ('Não', 'Sim'))
+
 option = st.sidebar.selectbox(
     'Tipo de projeção:',
     ('natural earth', 'mercator', 'equirectangular', 'orthographic', 'kavrayskiy7', 'miller', 'robinson', 'eckert4', 'azimuthal equal area', 'azimuthal equidistant', 'conic equal area',
@@ -43,8 +46,7 @@ option = st.sidebar.selectbox(
 #                                                                                       Manipulação dos dados
 ###############################################################################################################################################################################################################
 # Acessando a API de maneira dinâmica utilizando os inputs do usuário
-url = 'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={0}&endtime={1}&minmagnitude={magMinima}&limit=20000'.format(
-    startTime, endTime, magnitude_desejada)
+url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
 response = urllib.request.urlopen(url).read()
 data = json.loads(response.decode('utf-8'))
 
