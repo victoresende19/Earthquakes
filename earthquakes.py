@@ -3,6 +3,7 @@
 ###############################################################################################################################################################################################################
 import datetime
 import time
+from turtle import width
 import streamlit as st
 
 import pandas as pd
@@ -77,20 +78,44 @@ if projeto == 'Documentação':
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.write("")
+        st.markdown("""<p align='justify';'>
+                Os fenômenos naturais se referem a toda ação da natureza que não ocorre a partir de intervenção humana. Consequentemente, com o passar dos anos a humanidade têm trabalhado e estudado os motivos que geram tais fenômenos, principalmente por meio da coleta e análise de dados gerados por sensores que monitoram possíveis regiões afetadas.</p>""",
+                unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'>
+                Sismologia é o estudo dos sismos (ou terremotos) e, genericamente, dos diversos movimentos que ocorrem na superfície do globo terrestre. Esta ciência busca conhecer e determinar em que circunstâncias ocorrem os sismos naturais assim como suas causas, de modo a prevê-los em tempo e espaço. Portanto, por meio dessa ciência, é possível analisar dados gerados de diversos observatórios sismológicos e sensores sismógrafos a fim de entender os tremores terrestres, as causas e impactos diretos na sociedade, havendo até a possibilidade de prevê-los em alguns casos dependendo dos dados gerados.</p>""",
+                unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
+        st.image("https://images.theconversation.com/files/79512/original/image-20150427-18167-1q17be7.png?ixlib=rb-1.1.0&q=45&auto=format&w=754&fit=clip", 
+                caption = 'Ilustração onde as placas tectônicas deslizam umas sob as outras.')
+        #st.image("http://1.bp.blogspot.com/-L7wY8A1k-A0/VNeuLj8LZ_I/AAAAAAAAAgE/TlJZTJyzPyI/s1600/hipocentro%2Be%2Bepicentro.gif", width = 400)
 
     #Utilizando apenas a coluna do meio pois é centralizada
     with col2:
         st.markdown("<h1 style='text-align: center;'>Observatório sismológico</h1>",
             unsafe_allow_html=True)
-        st.image("https://spedigital.editorapositivo.com.br/IMP/72/CLA191/img/SPE_EF2_CIE_72_M002-mundo_placas_tectonicas.png")
+        st.image("https://spedigital.editorapositivo.com.br/IMP/72/CLA191/img/SPE_EF2_CIE_72_M002-mundo_placas_tectonicas.png",
+                    caption = 'Ilustração das placas tectônicas no planeta.')
+        st.markdown("""<p align='justify';'>
+                Com o passar dos anos e o avanço da tecnologia, houve a criação e implementação de sensores em locais com risco de desastres naturais para a verificação de riscos e coleta dos dados. Dessa forma, uma vasta quantidade de dados é gerada diariamente, principalmente quando há situações de tremores, seja em razão de terremotos, erupções, ou até mesmo de ações humanas como acontece em alguns tipos de explosões. Portanto, a criação de um observatório sobre tremores e a predição da magnitude de determinada vibração terrestre, dado a localidade (Por meio da latitude e longitude), torna-se interessante para o monitoramento de tais fenômenos.</p>""",
+                unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'>
+                A referência mundial em relação ao monitoramento global de tremores terrestre acontece por meio do Serviço Geológico dos Estados Unidos (USGS). Dessa forma, em seu site é disponibilizado uma API pública para a consulta dos dados, do qual pode ser acessada por diversas formas.</p>""",
+                unsafe_allow_html=True)
+        
+    with col3:
         st.markdown("""<p align='justify';'>
                 Esse projeto utiliza ferramentas de mineração, coleta, visualização dos dados, criação de modelos preditivos e implementação. Os dados utilizados nos mapas a seguir são oriundos de uma API disponibilizada pelo Serviço Geológico dos Estados Unidos (USGS). A etapa de coleta dos dados foi realizado por meio da linguagem de programação Python, da qual se arquitetou o tratamento dos dados para a extração das variáveis pertinentes. Da mesma forma, a etapa de visualização dos dados e implementação se desenvolveram por meio da linguagem Python.</p>""",
                 unsafe_allow_html=True)
-        st.image("https://1.bp.blogspot.com/-Q3Z47INYnlM/WRJMB_fLiiI/AAAAAAAAEAo/88NLZeVbeaUfg5cwFiOsQn9OlXSOxqmOwCLcB/s640/LIMITES.png")
-
-    with col3:
-        st.write("")
+        st.markdown("""<p align='justify';'>
+                Esse estudo utiliza dados da API pública citada em formato JSON, coletando dados de tremores que tiveram magnitude maior ou igual a 2. Vale ressaltar que a API possui um limite de apenas 20.000 registros por requisição. Consequentemente, será necessário fazer mais de uma consulta para coletar todos os dados do período citado na introdução.</p>""",
+                unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
+        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
+        st.image("https://ndma.gov.in/kids/images/img-4.png", width = 500, caption = 'Ilustração pós sismo.')
     
 
 if projeto == 'Mapas':
@@ -101,7 +126,7 @@ if projeto == 'Mapas':
         "Data final (ano/mês/dia):", datetime.date(2014, 1, 1))
 
     magMinima = 4
-    magnitude_desejada = st.sidebar.slider('Magnitude mínima:', magMinima, 10, magMinima)
+    magnitude_desejada = st.sidebar.slider('Magnitude mínima:', magMinima, 10, 5)
 
     paginaContinentes = st.sidebar.selectbox('Selecione a região de pesquisa', [
                                             'world', 'africa', 'north america', 'south america', 'asia', 'europe'])
