@@ -44,18 +44,34 @@ def Mapa(regiao):
 ###############################################################################################################################################################################################################
 #                                                                                       Inicio da página Streamlit - Input dos dados
 ###############################################################################################################################################################################################################
+st.set_page_config(layout="wide", initial_sidebar_state='expanded')
 st.sidebar.title('Filtros de pesquisa')
-st.markdown("<h2 style='text-align: center; color: black;'>Observatório sismológico</h2>",
-                unsafe_allow_html=True)
 projeto = st.sidebar.selectbox('Projeto', ('Documentação', 'Mapas'))
 
 if projeto == 'Documentação':
-    st.image("https://www.coladaweb.com/wp-content/uploads/2014/12/20210809-placas-tectonicas.png")
-    st.markdown("""<p align='justify'; color: black;'>
+    #Dividindo a pagina em tres colunas
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.write("")
+
+    #Utilizando apenas a coluna do meio pois é centralizada
+    with col2:
+        st.markdown("<h2 style='text-align: center; color: black;'>Observatório sismológico</h2>",
+            unsafe_allow_html=True)
+        st.image("https://www.coladaweb.com/wp-content/uploads/2014/12/20210809-placas-tectonicas.png")
+        st.markdown("""<p align='justify'; color: black;'>
                 Esse projeto utiliza ferramentas de mineração, coleta, visualização dos dados, criação de modelos preditivos e implementação. Os dados utilizados nos mapas a seguir são oriundos de uma API disponibilizada pelo Serviço Geológico dos Estados Unidos (USGS). A etapa de coleta dos dados foi realizado por meio da linguagem de programação Python, da qual se arquitetou o tratamento dos dados para a extração das variáveis pertinentes. Da mesma forma, a etapa de visualização dos dados e implementação se desenvolveram por meio da linguagem Python.</p>""",
                 unsafe_allow_html=True)
+        st.image("https://legacy.etap.org/demo/Earth_Science/es3/epicenter.jpg")
+
+    with col3:
+        st.write("")
+    
 
 if projeto == 'Mapas':
+    st.markdown("<h2 style='text-align: center; color: black;'>Observatório sismológico</h2>",
+                unsafe_allow_html=True)
     startTime = st.sidebar.date_input(
         "Data inicial (ano/mês/dia):", datetime.date(2011, 1, 1))
 
@@ -82,9 +98,14 @@ if projeto == 'Mapas':
 #                                                                                       Manipulação dos dados
 ###############################################################################################################################################################################################################
     # Acessando a API de maneira dinâmica utilizando os inputs do usuário
-    url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
-    response = urllib.request.urlopen(url).read()
-    data = json.loads(response.decode('utf-8'))
+    @st.cache(show_spinner = False)
+    def Dados(startTime, endTime, magnitude_desejada):
+        url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
+        response = urllib.request.urlopen(url).read()
+        data = json.loads(response.decode('utf-8'))
+        return data
+    
+    data = Dados(startTime, endTime, magnitude_desejada)
     Progresso().empty()
 ###############################################################################################################################################################################################################
     # Extraindo variáveis do JSON
