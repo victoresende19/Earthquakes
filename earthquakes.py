@@ -2,6 +2,7 @@
 #                                                                                               Bibliotecas
 ###############################################################################################################################################################################################################
 import datetime
+import time
 import streamlit as st
 
 import pandas as pd
@@ -11,36 +12,61 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 ###############################################################################################################################################################################################################
+#                                                                                                           Funções
+###############################################################################################################################################################################################################
+
+#Funcao barra progresso
+def Progresso():
+    texto = st.empty()
+    texto.markdown(f"<h2 style='text-align: center; color: black;'>Carregando...  </h2>",
+                unsafe_allow_html=True)
+    my_bar = st.progress(0)
+    for percent_complete in range(100):
+        time.sleep(0.1)
+        my_bar.progress(percent_complete + 1)    
+    texto.empty()
+    return my_bar
+
+# Funcao plotar mapa 
+def Mapa(regiao):
+    mapa = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
+                        projection=projecoes, color_continuous_scale=['#04290d', 'yellow', 'red'],
+                        animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope=regiao, width=900, height=600)
+    # Fazendo com que as fronteiras aparecam
+    mapa.update_geos(showcountries=True)
+
+    if regiao == 'world':
+        # Ajustando rotacao do globo
+        mapa.layout.geo.projection = {'rotation': {'lon': 200}, 'type': projecoes} 
+
+    return mapa
+
+###############################################################################################################################################################################################################
 #                                                                                       Inicio da página Streamlit - Input dos dados
 ###############################################################################################################################################################################################################
 st.set_page_config(layout="wide", initial_sidebar_state='expanded')
-
-st.markdown("<h2 style='text-align: center; color: black;'>Visualização dinâmica de tremores</h2>",
-            unsafe_allow_html=True)
 st.sidebar.title('Filtros de pesquisa')
+startTime = st.sidebar.date_input(
+    "Data inicial (ano/mês/dia):", datetime.date(2011, 1, 1))
 
-magMinima = 2
+endTime = st.sidebar.date_input(
+    "Data final (ano/mês/dia):", datetime.date(2014, 1, 1))
 
-# st.sidebar.markdown("<h4 style='text-align: center; color: black;'>Preencha os campos para criar uma visualização dinâmica </h4>",
-# unsafe_allow_html=True)
-startTime = st.sidebar.date_input("Data de inicio (Ano/ Mês / Dia):", datetime.date(2011, 1, 1))
+magMinima = 4
+magnitude_desejada = st.sidebar.slider('Magnitude mínima:', magMinima, 10, magMinima)
 
-endTime = st.sidebar.date_input("Data final (Ano/ Mês / Dia):", datetime.date(2014, 1, 1))
-
-magnitude_desejada = st.sidebar.slider('Magnitude mínima:', magMinima, 10, 5)
+paginaContinentes = st.sidebar.selectbox('Selecione a região de pesquisa', [
+                                         'world', 'africa', 'north america', 'south america', 'asia', 'europe'])
 
 visualizacaoTremor = st.sidebar.selectbox(
     'Tipo de tremor:', ('Terremoto', 'Explosão', 'Explosão Nuclear', 'Explosão de rochas', 'Explosão de pedreira'))
 
-tsunamiFilter = st.sidebar.selectbox('Verificar tsunami:', ('Não', 'Sim'))
-
 visualizacaoPeriodo = st.sidebar.selectbox('Visualização por ano:', ('Não', 'Sim'))
 
-option = st.sidebar.selectbox(
+projecoes = st.sidebar.selectbox(
     'Tipo de projeção:',
     ('natural earth', 'mercator', 'equirectangular', 'orthographic', 'kavrayskiy7', 'miller', 'robinson', 'eckert4', 'azimuthal equal area', 'azimuthal equidistant', 'conic equal area',
      'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal'))
-
 
 ###############################################################################################################################################################################################################
 #                                                                                       Manipulação dos dados
@@ -49,18 +75,13 @@ option = st.sidebar.selectbox(
 url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
 response = urllib.request.urlopen(url).read()
 data = json.loads(response.decode('utf-8'))
-
+Progresso().empty()
 ###############################################################################################################################################################################################################
 # Extraindo variáveis do JSON
 magnitude = []
 
 for mag in data['features']:
     magnitude.append(mag['properties']['mag'])
-
-tsunami = []
-
-for tsu in data['features']:
-    tsunami.append(tsu['properties']['tsunami'])
 
 tipoTerremoto = []
 
@@ -87,24 +108,18 @@ timestamp = []
 for time in data['features']:
     timestamp.append(time['properties']['time'])
 
-###############################################################################################################################################################################################################
 # Criando data frame com as variáveis em lista
-dicionario_geral = {'Magnitude': magnitude, 'Tsunami': tsunami,
+dicionario_geral = {'Magnitude': magnitude, 'Timestamp': timestamp,
                     'Tipo': tipoTerremoto, 'Alerta': alerta,
-                    'Latitude': latitude, 'Longitude': longitude,
-                    'Timestamp': timestamp}
+                    'Latitude': latitude, 'Longitude': longitude}       
 df = pd.DataFrame.from_dict(dicionario_geral)
 
-###############################################################################################################################################################################################################
 # Ajustando variáveis de data/tempo
 df.Timestamp = pd.to_datetime(df.Timestamp, unit='ms')
 df['Year'] = pd.to_datetime(df.Timestamp).dt.year
 df = df.sort_values(by=['Year'], ascending=True)
 
 # Renomeando observações
-# Variável Tsunami
-mapping_tsunami = {"Tsunami": {0: 'Não', 1: 'Sim'}}
-df = df.replace(mapping_tsunami)
 
 # Variável Tipo
 mapping_tipo = {"Tipo": {'earthquake': 'Terremoto', 'explosion': 'Explosão', 'nuclear explosion':
@@ -112,91 +127,36 @@ mapping_tipo = {"Tipo": {'earthquake': 'Terremoto', 'explosion': 'Explosão', 'n
 df = df.replace(mapping_tipo)
 
 df = df[df.Tipo == visualizacaoTremor]
-df = df[df.Tsunami == tsunamiFilter]
-###############################################################################################################################################################################################################
-# Gráficos
-# Mapa Mundi com projecao ortografica
-figMapaMundi = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
-                              color_continuous_scale=[
-                                  '#04290d', 'yellow', 'red'],
-                              animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), width=900, height=600)
-figMapaMundi.layout.geo.projection = {'rotation': {
-    'lon': 200}, 'type': option}  # Ajustando rotacao do globo
-# Fazendo com que as fronteiras aparecam
-figMapaMundi.update_geos(showcountries=True)
-
-# Mapa da Asia com projecao natural da terra
-figAsia = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
-                         projection=option, color_continuous_scale=[
-                             '#04290d', 'yellow', 'red'],
-                         animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope='asia', width=900, height=600)
-
-figAfrica = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
-                           projection=option, color_continuous_scale=[
-                               '#04290d', 'yellow', 'red'],
-                           animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope='africa', width=900, height=600)
-
-figAmericaNorte = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
-                                 projection=option, color_continuous_scale=[
-                                     '#04290d', 'yellow', 'red'],
-                                 animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope='north america', width=900, height=600)
-
-figAmericaSul = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
-                               projection=option, color_continuous_scale=[
-                                   '#04290d', 'yellow', 'red'],
-                               animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope='south america', width=900, height=600)
-
-figEuropa = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
-                           projection=option, color_continuous_scale=[
-                               '#04290d', 'yellow', 'red'],
-                           animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope='europe', width=900, height=600)
 
 ###############################################################################################################################################################################################################
 #                                                                                      Demonstração dos gráficos após os inputs
 ###############################################################################################################################################################################################################
-#st.sidebar.title('Menu de pesquisa por área')
-africa = 'África'
-americaNorte = 'América do Norte'
-americaSul = 'América do Sul'
-asia = 'Ásia'
-europa = 'Europa'
-mundial = 'Mapa Mundi'
+dataInicio = startTime.strftime("%d/%m/%Y")
+dataFim = endTime.strftime("%d/%m/%Y")
 
-paginaContinentes = st.sidebar.selectbox('Selecione o continente de pesquisa', [
-                                         mundial, africa, americaNorte, americaSul, asia, europa])
+#Titulo pagina
+st.markdown("<h2 style='text-align: center; color: black;'>Observatório sismológico</h2>",
+            unsafe_allow_html=True)
 
-if paginaContinentes == mundial:
-    st.markdown("<h3 style='text-align: center; color: black;'>Visualização de terremotos mundiais <br> {0} a {1} </br> </h3>".format(startTime.strftime("%d/%m/%Y"), endTime.strftime("%d/%m/%Y")),
-                unsafe_allow_html=True)
-    st.plotly_chart(figMapaMundi, use_container_width=True)
-    # st.write(df)
+#Breve descrição do projeto
+st.markdown("""<p align='justify'; color: black;'>
+            Esse projeto utiliza ferramentas de mineração, coleta, visualização dos dados, criação de modelos preditivos e implementação. Os dados utilizados nos mapas a seguir são oriundos de uma API disponibilizada pelo Serviço Geológico dos Estados Unidos (USGS). A etapa de coleta dos dados foi realizado por meio da linguagem de programação Python, da qual se arquitetou o tratamento dos dados para a extração das variáveis pertinentes. Da mesma forma, a etapa de visualização dos dados e implementação se desenvolveram por meio da linguagem Python.</p>""",
+            unsafe_allow_html=True)
 
-if paginaContinentes == africa:
-    st.markdown("<h3 style='text-align: center; color: black;'>Visualização de terremotos na Africa <br> {0} a {1} </br> </h3>".format(startTime.strftime("%d/%m/%Y"), endTime.strftime("%d/%m/%Y")),
-                unsafe_allow_html=True)
+#Título gráfico
+st.markdown("<h2 style='text-align: center; color: black;'>Visualização interativa dos tremores causados</h2>",
+            unsafe_allow_html=True)
 
-    st.plotly_chart(figAfrica, use_container_width=True)
-
-if paginaContinentes == americaNorte:
-    st.markdown("<h3 style='text-align: center; color: black;'>Visualização de terremotos na América do Norte <br> {0} a {1} </br> </h3>".format(startTime.strftime("%d/%m/%Y"), endTime.strftime("%d/%m/%Y")),
+#Data utilizada
+st.markdown(f"<h4 style='text-align: center; color: black; font-size:16px'>{dataInicio} a {dataFim}</h4>",
                 unsafe_allow_html=True)
 
-    st.plotly_chart(figAmericaNorte, use_container_width=True)
-
-if paginaContinentes == americaSul:
-    st.markdown("<h3 style='text-align: center; color: black;'>Visualização de terremotos na América do Sul <br> {0} a {1} </br> </h3>".format(startTime.strftime("%d/%m/%Y"), endTime.strftime("%d/%m/%Y")),
+#Volume dos dados
+st.markdown(f"<h4 style='text-align: center; color: black; font-size:16px'>Volume de dados pesquisados ({df.shape[0]})</h4>",
                 unsafe_allow_html=True)
+#Mapa
+st.plotly_chart(Mapa(paginaContinentes), use_container_width=True)
 
-    st.plotly_chart(figAmericaSul, use_container_width=True)
-
-if paginaContinentes == asia:
-    st.markdown("<h3 style='text-align: center; color: black;'>Visualização de terremotos na Ásia <br> {0} a {1} </br> </h3>".format(startTime.strftime("%d/%m/%Y"), endTime.strftime("%d/%m/%Y")),
+#Observacoes
+st.markdown(f"<p style='text-align: center; color: black; font-size:16px'> <strong>Obs:</strong> Quanto maior a quantidade de dados, mais tempo irá demorar a pesquisa  </p>",
                 unsafe_allow_html=True)
-
-    st.plotly_chart(figAsia, use_container_width=True)
-
-if paginaContinentes == europa:
-    st.markdown("<h3 style='text-align: center; color: black;'>Visualização de terremotos na Europa <br> {0} a {1} </br> </h3>".format(startTime.strftime("%d/%m/%Y"), endTime.strftime("%d/%m/%Y")),
-                unsafe_allow_html=True)
-
-    st.plotly_chart(figEuropa, use_container_width=True)
