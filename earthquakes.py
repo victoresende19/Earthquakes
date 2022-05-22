@@ -120,10 +120,10 @@ if projeto == 'Documentação':
 
 if projeto == 'Mapas':
     startTime = st.sidebar.date_input(
-        "Data inicial (ano/mês/dia):", datetime.date(2011, 1, 1))
+        "Data inicial (ano/mês/dia):", datetime.date(2011, 1, 1), min_value = datetime.date(1960, 1, 1))
 
     endTime = st.sidebar.date_input(
-        "Data final (ano/mês/dia):", datetime.date(2014, 1, 1))
+        "Data final (ano/mês/dia):", datetime.date(2014, 1, 1), min_value = datetime.date(1960, 1, 1))
 
     magMinima = 4
     magnitude_desejada = st.sidebar.slider('Magnitude mínima:', magMinima, 10, 5)
