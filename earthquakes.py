@@ -14,11 +14,21 @@ import plotly.graph_objects as go
 ###############################################################################################################################################################################################################
 #                                                                                                           Funções
 ###############################################################################################################################################################################################################
+def Tema():
+    #CURRENT_THEME = "blue"
+    IS_DARK_THEME = True
+    THEMES = [
+        "light",
+        "dark",
+        "green",
+        "blue",
+    ]
+    return IS_DARK_THEME, THEMES
 
 #Funcao barra progresso
 def Progresso():
     texto = st.empty()
-    texto.markdown(f"<h2 style='text-align: center; color: black;'>Carregando...  </h2>",
+    texto.markdown(f"<h2 style='text-align: center;'>Carregando...  </h2>",
                 unsafe_allow_html=True)
     my_bar = st.progress(0)
     for percent_complete in range(100):
@@ -27,25 +37,39 @@ def Progresso():
     texto.empty()
     return my_bar
 
-# Funcao plotar mapa 
-def Mapa(regiao):
-    mapa = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
-                        projection=projecoes, color_continuous_scale=['#04290d', 'yellow', 'red'],
-                        animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope=regiao, width=900, height=600)
-    # Fazendo com que as fronteiras aparecam
-    mapa.update_geos(showcountries=True)
+# Funcao metricas
+def Metricas(df):
+    col1, col2, col3 = st.columns(3)
+    col1.write("")
+    col2.metric("Magnitude Média", df.Magnitude.mean())
+    col3.write("")
 
-    if regiao == 'world':
-        # Ajustando rotacao do globo
-        mapa.layout.geo.projection = {'rotation': {'lon': 200}, 'type': projecoes} 
+# Funcao plotar mapa 
+def Mapa(regiao, df):
+    if df.shape[0] !=0:
+        mapa = px.scatter_geo(data_frame=df, lat="Latitude", lon="Longitude", color="Magnitude", size=df.Magnitude**10, size_max=60,
+                            projection=projecoes, color_continuous_scale=['#04290d', 'yellow', 'red'],
+                            animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope=regiao, width=900, height=600)
+        # Fazendo com que as fronteiras aparecam
+        mapa.update_geos(showcountries=True)
+
+        if regiao == 'world':
+            # Ajustando rotacao do globo
+            mapa.layout.geo.projection = {'rotation': {'lon': 200}, 'type': projecoes}
+
+    else:
+        mapa = st.warning('Não existem dados para os filtros aplicados')
+        mapa = go.Figure()
 
     return mapa
 
 ###############################################################################################################################################################################################################
 #                                                                                       Inicio da página Streamlit - Input dos dados
 ###############################################################################################################################################################################################################
+Tema()
 st.set_page_config(layout="wide", initial_sidebar_state='expanded')
-st.sidebar.title('Filtros de pesquisa')
+st.sidebar.markdown("<h1 style='text-align: center;'>Filtros de pesquisa</h1>",
+            unsafe_allow_html=True)
 projeto = st.sidebar.selectbox('Projeto', ('Documentação', 'Mapas'))
 
 if projeto == 'Documentação':
@@ -57,21 +81,19 @@ if projeto == 'Documentação':
 
     #Utilizando apenas a coluna do meio pois é centralizada
     with col2:
-        st.markdown("<h2 style='text-align: center; color: black;'>Observatório sismológico</h2>",
+        st.markdown("<h1 style='text-align: center;'>Observatório sismológico</h1>",
             unsafe_allow_html=True)
-        st.image("https://www.coladaweb.com/wp-content/uploads/2014/12/20210809-placas-tectonicas.png")
-        st.markdown("""<p align='justify'; color: black;'>
+        st.image("https://spedigital.editorapositivo.com.br/IMP/72/CLA191/img/SPE_EF2_CIE_72_M002-mundo_placas_tectonicas.png")
+        st.markdown("""<p align='justify';'>
                 Esse projeto utiliza ferramentas de mineração, coleta, visualização dos dados, criação de modelos preditivos e implementação. Os dados utilizados nos mapas a seguir são oriundos de uma API disponibilizada pelo Serviço Geológico dos Estados Unidos (USGS). A etapa de coleta dos dados foi realizado por meio da linguagem de programação Python, da qual se arquitetou o tratamento dos dados para a extração das variáveis pertinentes. Da mesma forma, a etapa de visualização dos dados e implementação se desenvolveram por meio da linguagem Python.</p>""",
                 unsafe_allow_html=True)
-        st.image("https://legacy.etap.org/demo/Earth_Science/es3/epicenter.jpg")
+        st.image("https://1.bp.blogspot.com/-Q3Z47INYnlM/WRJMB_fLiiI/AAAAAAAAEAo/88NLZeVbeaUfg5cwFiOsQn9OlXSOxqmOwCLcB/s640/LIMITES.png")
 
     with col3:
         st.write("")
     
 
 if projeto == 'Mapas':
-    st.markdown("<h2 style='text-align: center; color: black;'>Observatório sismológico</h2>",
-                unsafe_allow_html=True)
     startTime = st.sidebar.date_input(
         "Data inicial (ano/mês/dia):", datetime.date(2011, 1, 1))
 
@@ -92,7 +114,9 @@ if projeto == 'Mapas':
     projecoes = st.sidebar.selectbox(
         'Tipo de projeção:',
         ('natural earth', 'mercator', 'equirectangular', 'orthographic', 'kavrayskiy7', 'miller', 'robinson', 'eckert4', 'azimuthal equal area', 'azimuthal equidistant', 'conic equal area',
-        'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal'))
+        'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal'))  
+
+    resultado = st.sidebar.button('Aplicar')
 
 ###############################################################################################################################################################################################################
 #                                                                                       Manipulação dos dados
@@ -165,20 +189,28 @@ if projeto == 'Mapas':
     dataInicio = startTime.strftime("%d/%m/%Y")
     dataFim = endTime.strftime("%d/%m/%Y")
 
+    #Título da pagina
+    st.markdown("<h1 style='text-align: center;'>Observatório sismológico</h1>",
+                unsafe_allow_html=True)
+
     #Título gráfico
-    st.markdown("<h2 style='text-align: center; color: black;'>Visualização interativa dos tremores causados</h2>",
+    st.markdown("<h2 style='text-align: center;'>Visualização interativa dos tremores causados</h2>",
                 unsafe_allow_html=True)
 
     #Data utilizada
-    st.markdown(f"<h4 style='text-align: center; color: black; font-size:16px'>{dataInicio} a {dataFim}</h4>",
+    st.markdown(f"<h4 style='text-align: center; font-size:16px'>{dataInicio} a {dataFim}</h4>",
+                    unsafe_allow_html=True)
+    
+    #Metricas
+    #Metricas(df)
+    
+    #Mapa
+    st.plotly_chart(Mapa(paginaContinentes, df), use_container_width=True)
+
+    #Observacoes
+    st.markdown(f"<p style='text-align: center; font-size:16px'> <strong>Obs:</strong> A quantidade de dados pesquisados pode afetar no tempo de execução da visualização.</p>",
                     unsafe_allow_html=True)
 
     #Volume dos dados
-    st.markdown(f"<h4 style='text-align: center; color: black; font-size:16px'>Volume de dados pesquisados ({df.shape[0]})</h4>",
-                    unsafe_allow_html=True)
-    #Mapa
-    st.plotly_chart(Mapa(paginaContinentes), use_container_width=True)
-
-    #Observacoes
-    st.markdown(f"<p style='text-align: center; color: black; font-size:16px'> <strong>Obs:</strong> Quanto maior a quantidade de dados, mais tempo irá demorar a pesquisa  </p>",
+    st.markdown(f"<h4 style='text-align: center; font-size:16px'>Volume de dados pesquisados ({df.shape[0]})</h4>",
                     unsafe_allow_html=True)
