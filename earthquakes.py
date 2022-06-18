@@ -120,10 +120,10 @@ if projeto == 'Documentação':
 
 if projeto == 'Mapas':
     startTime = st.sidebar.date_input(
-        "Data inicial (ano/mês/dia):", datetime.date(2011, 1, 1), min_value = datetime.date(1960, 1, 1))
+        "Data inicial (ano/mês/dia):", datetime.date(2021, 1, 1), min_value = datetime.date(1960, 1, 1))
 
     endTime = st.sidebar.date_input(
-        "Data final (ano/mês/dia):", datetime.date(2014, 1, 1), min_value = datetime.date(1960, 1, 1))
+        "Data final (ano/mês/dia):", datetime.date(2022, 6, 10), min_value = datetime.date(1960, 1, 1))
 
     magMinima = 4
     magnitude_desejada = st.sidebar.slider('Magnitude mínima:', magMinima, 10, 5)
@@ -219,8 +219,8 @@ if projeto == 'Mapas':
                 unsafe_allow_html=True)
 
     #Título gráfico
-    st.markdown("<h2 style='text-align: center;'>Visualização interativa dos tremores causados</h2>",
-                unsafe_allow_html=True)
+    #st.markdown(f"<h2 style='text-align: center;'>Visualização interativa dos {df.shape[0]} primeiros tremores</h2>",
+    #            unsafe_allow_html=True)
 
     #Data utilizada
     st.markdown(f"<h4 style='text-align: center; font-size:16px'>{dataInicio} a {dataFim}</h4>",
