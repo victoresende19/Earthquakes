@@ -21,7 +21,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 ###############################################################################################################################################################################################################
-#                                                                                                           Funções
+#                                                                                                Funções
 ###############################################################################################################################################################################################################
 def Tema():
     #CURRENT_THEME = "blue"
@@ -113,9 +113,7 @@ def ManipulacaoDados(data):
 
     return df
 
-#data = Dados(startTime, endTime, magnitude_desejada)
-
-#Funcao barra progresso
+# Funcao barra progresso
 def ProgressoML():
     texto = st.empty()
     texto.markdown(f"<h2 style='text-align: center;'>Fazendo a previsão...  </h2>",
@@ -127,7 +125,7 @@ def ProgressoML():
     texto.empty()
     return my_bar
 
-
+# Funcao barra progresso
 def ProgressoDados():
     texto = st.empty()
     texto.markdown(f"<h2 style='text-align: center;'>Carregando os dados...  </h2>",
@@ -153,52 +151,38 @@ def Mapa(regiao, df):
                             animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope=regiao, width=900, height=600)
         # Fazendo com que as fronteiras aparecam
         mapa.update_geos(showcountries=True)
-
         if regiao == 'world':
             # Ajustando rotacao do globo
             mapa.layout.geo.projection = {'rotation': {'lon': 200}, 'type': projecoes}
-
     else:
         mapa = st.warning('Não existem dados para os filtros aplicados')
         mapa = go.Figure()
-
     return mapa
 
 ###############################################################################################################################################################################################################
-#                                                                                       Inicio da página Streamlit - Input dos dados
+#                                                                                                Streamlit
 ###############################################################################################################################################################################################################
 Tema()
 st.set_page_config(layout="wide", initial_sidebar_state='expanded')
-st.sidebar.markdown("<h1 style='text-align: center;'>Filtros de pesquisa</h1>",
-            unsafe_allow_html=True)
+st.sidebar.markdown("<h1 style='text-align: center;'>Filtros de pesquisa</h1>", unsafe_allow_html=True)
 projeto = st.sidebar.selectbox('Projeto', ('Documentação', 'Mapas', 'Previsão'))
 
+# Pagina documentacao
 if projeto == 'Documentação':
     st.markdown("<h1 style='text-align: center;'>Observatório sismológico</h1>", unsafe_allow_html=True)
-    st.image("https://i.ibb.co/gwyKVGQ/002-1-1.png",
-                caption = 'Ilustração da cidade de Lisboa após o terremoto em 1755')
-    #Dividindo a pagina em tres colunas
+    st.image("https://i.ibb.co/gwyKVGQ/002-1-1.png", caption = 'Ilustração da cidade de Lisboa após o terremoto em 1755')
+
+    # Dividindo a pagina em tres colunas
     col1, col2, col3 = st.columns(3)
     with col1:
-        # st.markdown("""<p align='justify';'>
-        #         Os fenômenos naturais se referem a toda ação da natureza que não ocorre a partir de intervenção humana. Consequentemente, com o passar dos anos a humanidade têm trabalhado e estudado os motivos que geram tais fenômenos, principalmente por meio da coleta e análise de dados gerados por sensores que monitoram possíveis regiões afetadas.</p>""",
-        #         unsafe_allow_html=True)
         st.markdown("""<p align='justify';'>
                Os fenômenos naturais que se originam por meio de tremores terrestre ocorrem desde o início do planeta. Desde então a humanidade sofria com as consequências de tais fenômenos, dos quais são capazes de mudar paisagens, clima, mortes e diversos outros fatores. Entretanto, os terremotos começaram a ser analisados cientificamente apenas após o terremoto que devastou Lisboa, em 1755. Considerado um dos terremotos mais fortes que atingiu a Europa, e segundo os sismólogos modernos, o tremor foi capaz de atingir uma magnitude de 9 na escala Richter, do qual gerou um tsunami e por fim tirou a vida de certa de 100 mil pessoas. Uma das consequências desse forte terremoto foi o interesse da ciência sobre a sismologia, ciência da qual era pouco explorada até a época. </p>""",
                 unsafe_allow_html=True)
         st.markdown("""<p align='justify';'>
                 A sismologia visa o estudo dos sismos (ou terremotos) e, genericamente, dos diversos movimentos que ocorrem na superfície do globo terrestre. Esta ciência busca conhecer e determinar em que circunstâncias ocorrem os sismos naturais assim como suas causas, de modo a prevê-los em tempo e espaço. Portanto, por meio dessa ciência, é possível analisar dados gerados de diversos observatórios sismológicos e sensores sismógrafos a fim de entender os tremores terrestres, as causas e impactos diretos na sociedade, havendo até a possibilidade de prevê-los em alguns casos dependendo dos dados gerados.</p>""",
                 unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
-        #st.image("http://1.bp.blogspot.com/-L7wY8A1k-A0/VNeuLj8LZ_I/AAAAAAAAAgE/TlJZTJyzPyI/s1600/hipocentro%2Be%2Bepicentro.gif", width = 400)
 
-    #Utilizando apenas a coluna do meio pois é centralizada
     with col2:
-        # st.image("https://spedigital.editorapositivo.com.br/IMP/72/CLA191/img/SPE_EF2_CIE_72_M002-mundo_placas_tectonicas.png",
-        #             caption = 'Ilustração das placas tectônicas no planeta.')
         st.markdown("""<p align='justify';'>
                 Com o passar dos anos e o avanço da tecnologia, houve a criação e implementação de sensores em locais com risco de desastres naturais para a verificação de riscos e coleta dos dados. Dessa forma, uma vasta quantidade de dados é gerada diariamente, principalmente quando há situações de tremores, seja em razão de terremotos, erupções, ou até mesmo de ações humanas como acontece em alguns tipos de explosões. Portanto, a criação de um observatório sobre tremores e a predição da magnitude de determinada vibração terrestre, dado a localidade (Por meio da latitude e longitude), torna-se interessante para o monitoramento de tais fenômenos.</p>""",
                 unsafe_allow_html=True)
@@ -213,131 +197,95 @@ if projeto == 'Documentação':
         st.markdown("""<p align='justify';'>
                 Esse estudo utiliza dados da API pública citada em formato JSON, coletando dados de tremores que tiveram magnitude maior ou igual a 2. Vale ressaltar que a API possui um limite de apenas 20.000 registros por requisição. Consequentemente, será necessário fazer mais de uma consulta para coletar todos os dados do período citado na introdução.</p>""",
                 unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'></p>""", unsafe_allow_html=True)
-        #st.image("https://ndma.gov.in/kids/images/img-4.png", width = 500, caption = 'Ilustração pós sismo.')
     
-
+# Pagina mapas
 elif projeto == 'Mapas':
 
+    # Filtros
     form = st.sidebar.form(key='my_form')
-
-    startTime = form.date_input(
-        "Data inicial (ano/mês/dia):", datetime.date(2021, 1, 1), min_value = datetime.date(1960, 1, 1))
-
-    endTime = form.date_input(
-        "Data final (ano/mês/dia):", datetime.date(2022, 6, 10), min_value = datetime.date(1960, 1, 1))
-
+    startTime = form.date_input("Data inicial (ano/mês/dia):", datetime.date(2021, 1, 1), min_value = datetime.date(1960, 1, 1))
+    endTime = form.date_input("Data final (ano/mês/dia):", datetime.date(2022, 6, 10), min_value = datetime.date(1960, 1, 1))
     magMinima = 4
     magnitude_desejada = form.slider('Magnitude mínima:', magMinima, 10, 5)
-
-    paginaContinentes = form.selectbox('Selecione a região de pesquisa', [
-                                            'world', 'africa', 'north america', 'south america', 'asia', 'europe'])
-
-    visualizacaoTremor = form.selectbox(
-        'Tipo de tremor:', ('Terremoto', 'Explosão', 'Explosão Nuclear', 'Explosão de rochas', 'Explosão de pedreira'))
-
+    paginaContinentes = form.selectbox('Selecione a região de pesquisa', [ 'world', 'africa', 'north america', 'south america', 'asia', 'europe'])
+    visualizacaoTremor = form.selectbox('Tipo de tremor:', ('Terremoto', 'Explosão', 'Explosão Nuclear', 'Explosão de rochas', 'Explosão de pedreira'))
     visualizacaoPeriodo = form.selectbox('Visualização por ano:', ('Não', 'Sim'))
-
-    projecoes = form.selectbox(
-        'Tipo de projeção:',
+    projecoes = form.selectbox('Tipo de projeção:',
         ('natural earth', 'mercator', 'equirectangular', 'orthographic', 'kavrayskiy7', 'miller', 'robinson', 'eckert4', 'azimuthal equal area', 'azimuthal equidistant', 'conic equal area',
         'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal'))  
-    
     submit_button = form.form_submit_button(label='Aplicar filtros')
 
-    #Dados
+    # Dados
     data = Dados(startTime, endTime, magnitude_desejada)
     df = ManipulacaoDados(data)
 
-    #Variável Tipo
+    # Variável Tipo
     mapping_tipo = {"Tipo": {'earthquake': 'Terremoto', 'explosion': 'Explosão', 'nuclear explosion':
                             'Explosão Nuclear', 'rock burst': 'Explosão de rochas', 'quarry blast': 'Explosão de pedreira'}}
     df = df.replace(mapping_tipo)
     df = df[df.Tipo == visualizacaoTremor]
 
+    # Barra de progresso
     ProgressoDados().empty()
 
-###############################################################################################################################################################################################################
-#                                                                                      Demonstração dos gráficos após os inputs
-###############################################################################################################################################################################################################
+    # Demonstração dos gráficos após os inputs
     dataInicio = startTime.strftime("%d/%m/%Y")
     dataFim = endTime.strftime("%d/%m/%Y")
 
-    #Título da pagina
-    st.markdown("<h1 style='text-align: center;'>Observatório sismológico</h1>",
-                unsafe_allow_html=True)
+    # Título da pagina
+    st.markdown("<h1 style='text-align: center;'>Observatório sismológico</h1>", unsafe_allow_html=True)
 
-    #Data utilizada
-    st.markdown(f"<h4 style='text-align: center; font-size:16px'>{dataInicio} a {dataFim}</h4>",
-                    unsafe_allow_html=True)
+    # Data utilizada
+    st.markdown(f"<h4 style='text-align: center; font-size:16px'>{dataInicio} a {dataFim}</h4>", unsafe_allow_html=True)
     
-    #Mapa
+    # Mapa
     st.plotly_chart(Mapa(paginaContinentes, df), use_container_width=True)
 
-    #Volume dos dados
-    st.markdown(f"<h4 style='text-align: center; font-size:16px'>Volume de dados pesquisados ({df.shape[0]})</h4>",
-                    unsafe_allow_html=True)
+    # Volume dos dados
+    st.markdown(f"<h4 style='text-align: center; font-size:16px'>Volume de dados pesquisados ({df.shape[0]})</h4>", unsafe_allow_html=True)
 
-    #Observacoes
-    st.markdown(f"<p style='text-align: center; font-size:16px; color:red'><strong>Observação (1):</strong> Caso o range de data escolhido tenha mais de 20.000 dados, esse é o limite que será utilizado no gráfico.</p>",
-            unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center; font-size:16px; color:red'> <strong>Observação (2):</strong> A quantidade de dados pesquisados pode afetar no tempo de execução da visualização.</p>",
-                    unsafe_allow_html=True)
+    # Observacoes
+    st.markdown(f"<p style='text-align: center; font-size:16px; color:red'><strong>Observação (1):</strong> Caso o range de data escolhido tenha mais de 20.000 dados, esse é o limite que será utilizado no gráfico.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center; font-size:16px; color:red'> <strong>Observação (2):</strong> A quantidade de dados pesquisados pode afetar no tempo de execução da visualização.</p>", unsafe_allow_html=True)
 
+# Pagina previsao
 elif projeto == 'Previsão':
 
+    # Barra de progresso
     ProgressoDados().empty()
     st.markdown("<h1 style='text-align: center; color: black;'>Previsão de terremotos</h1>", unsafe_allow_html=True) 
     st.markdown("<h3 style='text-align: center; color: black;'>Longitude e Profundidade</h3>", unsafe_allow_html=True) 
     st.markdown("<p style='text-align: left; color: red;'><strong>Observação</strong>: Os dados serão coletados e o modelo treinado de acordo com os filtros escolhidos</p>", unsafe_allow_html=True)
     
+    # Filtros
     col1, col2= st.columns(2)
     with col1:
+        # Longitude
         form1 = st.form(key='my_form1')
-        startTime = form1.date_input(
-        "Data inicial (ano/mês/dia):", datetime.date(2021, 1, 1), min_value = datetime.date(1960, 1, 1))
         Longitude = form1.slider('Longitude: ', min_value = -174, max_value = 174, value = 142)
-
         submit_button = form1.form_submit_button(label='Aplicar filtros')
     
     with col2:
+        # Profundidade
         form2 = st.form(key='my_form2')
-        endTime = form2.date_input(
-        "Data final (ano/mês/dia):", datetime.date(2022, 6, 10), min_value = datetime.date(1960, 1, 1))
         Profundidade = form2.slider('Profundidade: ', min_value = 10, max_value = 400, value = 53)
-    
         submit_button = form2.form_submit_button(label='Aplicar filtros')
 
+    # Dataframe
+    ProgressoML().empty() # Barra de progresso
+    startTime =  datetime.date(2021, 1, 1)
+    endTime =  datetime.date(2022, 6, 10)
     data = Dados(startTime, endTime, magnitude_desejada = 2)
     df = ManipulacaoDados(data)
 
-    # import seaborn as sns
-    # import matplotlib.pyplot as plt
-
-    # fig, ax = plt.subplots(1, 1,figsize=(20,5))
-    # sns.heatmap(df.corr(), annot = True, cmap="Reds", ax=ax)
-    # st.write(fig)
-
-
-
-    ##################### MODELO #######################################
-    ProgressoML().empty()
+    # Modelo
+    ProgressoML().empty() # Barra de progresso
     X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor = Previsao(df)
-
-    #R2
-    score_stand_ran = regressor.score(X_stand_test, y_test) #zscore
-    #MSE
+    # R2
+    score_stand_ran = regressor.score(X_stand_test, y_test)
+    # MSE
     mse = mean_squared_error(y_test, y_pred)
-    
-    new_array = np.array([Longitude, Profundidade]).reshape(-1, 2)
-    st.markdown(f"<h3 style='text-align: left; color: black;'>Previsão da magnitude: {round(regressor.predict(new_array)[0], 2)} graus na escala Ritcher </h3>", unsafe_allow_html=True)
-
-
-    #Metricas(mse = mse, r2 = score_stand_ran)
-
+    previsao = np.array([Longitude, Profundidade]).reshape(-1, 2)
+    st.markdown(f"<h3 style='text-align: left; color: black;'>Previsão da magnitude: {round(regressor.predict(previsao)[0], 2)} graus na escala Ritcher </h3>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>R²</strong>: {round(score_stand_ran, 2)} </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>MSE</strong>: {round(mse, 2)} </p>", unsafe_allow_html=True)
-    #st.write(f"Raiz do Erro Médio Quadrático - RSME: {mse}")
-    #st.write(f"Erro Médio Absoluto - MSA: {mean_absolute_error(y_test, y_pred)}")
