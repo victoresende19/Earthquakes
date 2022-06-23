@@ -288,14 +288,16 @@ elif projeto == 'Previsão':
         form2 = st.form(key='my_form2')
         Profundidade = form2.slider('Profundidade: ', min_value = 10, max_value = 400, value = 53)
         submit_button = form2.form_submit_button(label='Aplicar filtros')
-    st.markdown("<p style='text-align: left; color: red;'><strong>Observação</strong>: A previsão é realizada de acordo com os dados do período de 15/12/2021 a 10/06/2022</p>", unsafe_allow_html=True)
+
+    startTime =  datetime.date(2010, 1, 1).strftime("%d/%m/%Y")
+    endTime =  datetime.date(2022, 6, 10).strftime("%d/%m/%Y")
+
+    st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação</strong>: A previsão é realizada de acordo com os dados do período de {startTime} a {endTime}</p>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: left; color: black;'>Caso o epicentro de um terremoto tenha profundidade {Profundidade} (em km) e a longitude seja {Longitude}, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
    
-    # Dataframe
-    startTime =  datetime.date(2021, 1, 1)
-    endTime =  datetime.date(2022, 6, 10)
 
-    data = Dados(startTime, endTime, magnitude_desejada = 4)
+
+    data = Dados(startTime, endTime, magnitude_desejada = 2)
     df = ManipulacaoDados(data)
 
     # Modelo
