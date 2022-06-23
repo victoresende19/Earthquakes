@@ -256,6 +256,7 @@ elif projeto == 'Previsão':
     ProgressoDados().empty()
 
     st.markdown("<h1 style='text-align: center; color: black;'>Previsão de terremotos</h1>", unsafe_allow_html=True) 
+    st.markdown("<p style='text-align: left; color: black;'>Como exposto por Geller (1997),  terremotos são desastres praticamente impossíveis de se prever dada sua natureza incerta. Entretanto, Mondol (2021) apresenta um estudo sobre variáveis e métodos para previsão da magnitude de um terremoto. Nesse último, o algoritmo de floresta aleatória obteve resultados interessantes quando alimentado por dados sobre profundidade dos terremotos.  </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; color: black;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se <strong>floresta aleatória</strong>, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
     
     # Filtros
@@ -295,3 +296,7 @@ elif projeto == 'Previsão':
     st.markdown("<p style='text-align: left; color: black;'>As métricas utilizadas para a avaliação da floresta aleatória são o R², ou coeficiente de determinação, do qual demonstra quão explicativa o modelo é ,variando entre 0 a 1. Já o MSE, ou erro médio quadrático, representa os erros associados de cada observação treinada em relação ao valor predito. </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>R²</strong>: {round(score_stand_ran, 2)} </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>MSE</strong>: {round(mse, 2)} </p>", unsafe_allow_html=True)
+
+    st.markdown(f"<p style='text-align: left; color: black;'><br><br><strong>Referências</strong> </p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: left; color: black;'><a href='http://essay.utwente.nl/87313/'>[1] Manaswi Mondol. Analysis and prediction of earthquakes using different machine learning techniques. B.S. thesis, University of Twente, 2021.</a> </p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: left; color: black;'><a href='https://www.scec.org/publication/404'>[2] Robert J Geller, David D Jackson, Yan Y Kagan, and Francesco Mulargia. Earthquakes cannot be predicted. Science, 275(5306):1616–1616, 1997</a> </p>", unsafe_allow_html=True)
