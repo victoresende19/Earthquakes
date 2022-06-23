@@ -40,8 +40,8 @@ def ProgressoML():
     texto.markdown(f"<h2 style='text-align: center;'>Fazendo a previsão...  </h2>",
                 unsafe_allow_html=True)
     my_bar = st.progress(0)
-    for percent_complete in range(10):
-        time.sleep(0.01)
+    for percent_complete in range(100):
+        time.sleep(0.001)
         my_bar.progress(percent_complete + 1)    
     texto.empty()
     return my_bar
@@ -49,11 +49,11 @@ def ProgressoML():
 # Funcao barra progresso
 def ProgressoDados():
     texto = st.empty()
-    texto.markdown(f"<h2 style='text-align: center;'>Carregando os dados...  </h2>",
+    texto.markdown(f"<h2 style='text-align: center;'>Carregando...  </h2>",
                 unsafe_allow_html=True)
     my_bar = st.progress(0)
-    for percent_complete in range(10):
-        time.sleep(0.01)
+    for percent_complete in range(100):
+        time.sleep(0.001)
         my_bar.progress(percent_complete + 1)    
     texto.empty()
     return my_bar
@@ -67,6 +67,8 @@ def Dados(startTime, endTime, magnitude_desejada):
     return data
 
 def Previsao(df):
+    ProgressoML().empty()
+
     cols =  ['Longitude', 'Profundidade']
     X = df.loc[:, cols].values
     y = df.loc[:, 'Magnitude'].values
@@ -219,8 +221,8 @@ elif projeto == 'Mapas':
 
     # Filtros
     form = st.sidebar.form(key='my_form')
-    startTime = form.date_input("Data inicial (ano/mês/dia):", datetime.date(2021, 1, 1), min_value = datetime.date(1960, 1, 1))
-    endTime = form.date_input("Data final (ano/mês/dia):", datetime.date(2022, 6, 10), min_value = datetime.date(1960, 1, 1))
+    startTime = form.date_input("Data inicial (ano/mês/dia):", datetime.date(2015, 1, 1), min_value = datetime.date(1960, 1, 1))
+    endTime = form.date_input("Data final (ano/mês/dia):", datetime.date(2022, 6, 10))
     magMinima = 4
     magnitude_desejada = form.slider('Magnitude mínima:', magMinima, 10, 5)
     paginaContinentes = form.selectbox('Selecione a região de pesquisa', [ 'world', 'africa', 'north america', 'south america', 'asia', 'europe'])
@@ -228,9 +230,10 @@ elif projeto == 'Mapas':
     visualizacaoPeriodo = form.selectbox('Visualização por ano:', ('Não', 'Sim'))
     projecoes = form.selectbox('Tipo de projeção:',
         ('natural earth', 'mercator', 'equirectangular', 'orthographic', 'kavrayskiy7', 'miller', 'robinson', 'eckert4', 'azimuthal equal area', 'azimuthal equidistant', 'conic equal area',
-        'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal'))  
+        'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal')) 
+    #ProgressoDados().empty()
     submit_button = form.form_submit_button(label='Aplicar filtros')
-
+    
     # Dados
     data = Dados(startTime, endTime, magnitude_desejada)
     df = ManipulacaoDados(data)
@@ -241,8 +244,8 @@ elif projeto == 'Mapas':
     df = df.replace(mapping_tipo)
     df = df[df.Tipo == visualizacaoTremor]
 
-    # Barra de progresso
-    ProgressoML().empty()
+    #Barra de progresso
+    #ProgressoDados().empty()
 
     # Demonstração dos gráficos após os inputs
     dataInicio = startTime.strftime("%d/%m/%Y")
@@ -267,18 +270,17 @@ elif projeto == 'Mapas':
 # Pagina previsao
 elif projeto == 'Previsão':
 
+    #ProgressoDados().empty()
     # Barra de progresso
     st.markdown("<h1 style='text-align: center; color: black;'>Previsão de terremotos</h1>", unsafe_allow_html=True) 
-    #st.markdown("<h3 style='text-align: center; color: black;'>Longitude e Profundidade</h3>", unsafe_allow_html=True) 
-
-    st.markdown("<p style='text-align: left; color: black;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se floresta aleatória, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; color: black;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se <strong>floresta aleatória</strong>, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
     
     # Filtros
     col1, col2= st.columns(2)
     with col1:
         # Longitude
         form1 = st.form(key='my_form1')
-        Longitude = form1.slider('Longitude: ', min_value = -174, max_value = 174, value = 142)
+        Longitude = form1.slider('Longitude: ', min_value = -174.0, max_value = 174.0, value = 142.0)
         submit_button = form1.form_submit_button(label='Aplicar filtros')
     
     with col2:
@@ -293,10 +295,9 @@ elif projeto == 'Previsão':
     startTime =  datetime.date(2021, 1, 1)
     endTime =  datetime.date(2022, 6, 10)
 
-    data = Dados(startTime, endTime, magnitude_desejada = 2)
+    data = Dados(startTime, endTime, magnitude_desejada = 4)
     df = ManipulacaoDados(data)
 
-    #ProgressoML().empty() # Barra de progresso
     # Modelo
     X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor = Previsao(df)
     # R2
