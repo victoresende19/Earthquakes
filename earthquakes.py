@@ -49,17 +49,17 @@ def ProgressoML():
 # Funcao barra progresso
 def ProgressoDados():
     texto = st.empty()
-    texto.markdown(f"<h2 style='text-align: center;'>Carregando...  </h2>",
+    texto.markdown(f"<h2 style='text-align: center;'>Carregando dados...  </h2>",
                 unsafe_allow_html=True)
     my_bar = st.progress(0)
     for percent_complete in range(100):
-        time.sleep(0.001)
+        time.sleep(0.01)
         my_bar.progress(percent_complete + 1)    
     texto.empty()
     return my_bar
 
 #Acessando a API
-@st.cache(show_spinner = True)
+#@st.cache(show_spinner = True)
 def Dados(startTime, endTime, magnitude_desejada):
     url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
     response = urllib.request.urlopen(url).read()
@@ -67,8 +67,6 @@ def Dados(startTime, endTime, magnitude_desejada):
     return data
 
 def Previsao(df):
-    ProgressoML().empty()
-
     cols =  ['Longitude', 'Profundidade']
     X = df.loc[:, cols].values
     y = df.loc[:, 'Magnitude'].values
@@ -83,12 +81,12 @@ def Previsao(df):
 
     regressor.fit(X_stand_train, y_train)
     y_pred = regressor.predict(X_stand_test)
-
+    ProgressoML().empty()
     return X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor
 
 
 #Manipulando os dados
-@st.cache(show_spinner = True)
+#@st.cache(show_spinner = True)
 def ManipulacaoDados(data):
     magnitude = []
     for mag in data['features']:
@@ -198,9 +196,6 @@ if projeto == 'Documentação':
     
 # Pagina mapas
 elif projeto == 'Mapas':
-    
-    # Barra de progresso e limpeza da tela
-    ProgressoDados().empty()
 
     # Filtros
     form = st.sidebar.form(key='my_form')
@@ -216,9 +211,9 @@ elif projeto == 'Mapas':
         'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal')) 
     submit_button = form.form_submit_button(label='Aplicar filtros')
     
-    # Dados
     data = Dados(startTime, endTime, magnitude_desejada)
     df = ManipulacaoDados(data)
+    ProgressoDados().empty()
 
     # Variável Tipo
     mapping_tipo = {"Tipo": {'earthquake': 'Terremoto', 'explosion': 'Explosão', 'nuclear explosion':
@@ -226,8 +221,6 @@ elif projeto == 'Mapas':
     df = df.replace(mapping_tipo)
     df = df[df.Tipo == visualizacaoTremor]
 
-    #Barra de progresso
-    #ProgressoDados().empty()
 
     # Demonstração dos gráficos após os inputs
     dataInicio = startTime.strftime("%d/%m/%Y")
@@ -246,14 +239,14 @@ elif projeto == 'Mapas':
     st.markdown(f"<h4 style='text-align: center; font-size:16px'>Volume de dados pesquisados ({df.shape[0]})</h4>", unsafe_allow_html=True)
 
     # Observacoes
-    st.markdown(f"<p style='text-align: center; font-size:16px; color:red'><strong>Observação (1):</strong> Caso o range de data escolhido tenha mais de 20.000 dados, esse é o limite que será utilizado no gráfico.</p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center; font-size:16px; color:red'> <strong>Observação (2):</strong> A quantidade de dados pesquisados pode afetar no tempo de execução da visualização.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: left; font-size:16px; color:red'><strong>Observação (1):</strong> Caso o range de data escolhido tenha mais de 20.000 dados, esse é o limite que será utilizado no gráfico.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: left; font-size:16px; color:red'> <strong>Observação (2):</strong> A quantidade de dados pesquisados pode afetar no tempo de execução da visualização.</p>", unsafe_allow_html=True)
 
 # Pagina previsao
 elif projeto == 'Previsão':
 
     # Barra de progresso e limpeza da tela
-    ProgressoDados().empty()
+    #ProgressoDados().empty()
 
     st.markdown("<h1 style='text-align: center; color: black;'>Previsão de terremotos</h1>", unsafe_allow_html=True) 
     st.markdown("<p style='text-align: left; color: black;'>Como exposto por Geller (1997),  terremotos são desastres praticamente impossíveis de se prever dada sua natureza incerta. Entretanto, Mondol (2021) apresenta um estudo sobre variáveis e métodos para previsão da magnitude de um terremoto. Nesse último, o algoritmo de floresta aleatória obteve resultados interessantes quando alimentado por dados sobre profundidade dos terremotos.  </p>", unsafe_allow_html=True)
@@ -273,16 +266,18 @@ elif projeto == 'Previsão':
         Profundidade = form2.slider('Profundidade: ', min_value = 10, max_value = 400, value = 53)
         submit_button = form2.form_submit_button(label='Aplicar filtros')
 
-    startTime =  datetime.date(2010, 1, 1).strftime("%d/%m/%Y")
+    startTime =  datetime.date(2015, 1, 1).strftime("%d/%m/%Y")
     endTime =  datetime.date(2022, 6, 10).strftime("%d/%m/%Y")
 
-    st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação</strong>: A previsão é realizada de acordo com os dados do período de {startTime} a {endTime}</p>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='text-align: left; color: black;'>Caso a longitude em que o terremoto ocorra seja {Longitude} e o epicentro tenha profundidade de {Profundidade} em km, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
+    st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (1)</strong>: A previsão é realizada de acordo com os dados do período de {startTime} a {endTime}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (2)</strong>: Ao aplicar os filtros a floresta aleatória é ativada e a magnitude do terremoto é predito.</p>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: left; color: black;'>Caso a longitude em que o terremoto ocorra seja {Longitude} e o epicentro tenha profundidade de {Profundidade} km, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
    
 
 
     data = Dados(startTime, endTime, magnitude_desejada = 2)
     df = ManipulacaoDados(data)
+    ProgressoDados().empty()
 
     # Modelo
     X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor = Previsao(df)
@@ -293,7 +288,7 @@ elif projeto == 'Previsão':
     previsao = np.array([Longitude, Profundidade]).reshape(-1, 2)
 
     st.markdown(f"<h4 style='text-align: left; color: black;'>Previsão da magnitude: {round(regressor.predict(previsao)[0], 2)} graus na escala Ritcher </h4>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: left; color: black;'>As métricas utilizadas para a avaliação da floresta aleatória são o R², ou coeficiente de determinação, do qual demonstra quão explicativa o modelo é ,variando entre 0 a 1. Já o MSE, ou erro médio quadrático, representa os erros associados de cada observação treinada em relação ao valor predito. </p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; color: black;'>As métricas utilizadas para a avaliação da floresta aleatória são o R², ou coeficiente de determinação, do qual demonstra quão explicativo o modelo é, variando entre 0 a 1. Já o MSE, ou erro médio quadrático, representa os erros associados de cada observação treinada em relação ao valor predito. </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>R²</strong>: {round(score_stand_ran, 2)} </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>MSE</strong>: {round(mse, 2)} </p>", unsafe_allow_html=True)
 
