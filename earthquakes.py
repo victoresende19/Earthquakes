@@ -34,8 +34,32 @@ def Tema():
     ]
     return IS_DARK_THEME, THEMES
 
+# Funcao barra progresso
+def ProgressoML():
+    texto = st.empty()
+    texto.markdown(f"<h2 style='text-align: center;'>Fazendo a previsão...  </h2>",
+                unsafe_allow_html=True)
+    my_bar = st.progress(0)
+    for percent_complete in range(10):
+        time.sleep(0.01)
+        my_bar.progress(percent_complete + 1)    
+    texto.empty()
+    return my_bar
+
+# Funcao barra progresso
+def ProgressoDados():
+    texto = st.empty()
+    texto.markdown(f"<h2 style='text-align: center;'>Carregando os dados...  </h2>",
+                unsafe_allow_html=True)
+    my_bar = st.progress(0)
+    for percent_complete in range(10):
+        time.sleep(0.01)
+        my_bar.progress(percent_complete + 1)    
+    texto.empty()
+    return my_bar
+
 #Acessando a API
-@st.cache(show_spinner = False)
+@st.cache(show_spinner = True)
 def Dados(startTime, endTime, magnitude_desejada):
     url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
     response = urllib.request.urlopen(url).read()
@@ -62,7 +86,7 @@ def Previsao(df):
 
 
 #Manipulando os dados
-@st.cache(show_spinner = False)
+@st.cache(show_spinner = True)
 def ManipulacaoDados(data):
     magnitude = []
     for mag in data['features']:
@@ -113,30 +137,6 @@ def ManipulacaoDados(data):
 
     return df
 
-# Funcao barra progresso
-def ProgressoML():
-    texto = st.empty()
-    texto.markdown(f"<h2 style='text-align: center;'>Fazendo a previsão...  </h2>",
-                unsafe_allow_html=True)
-    my_bar = st.progress(0)
-    for percent_complete in range(100):
-        time.sleep(0.1)
-        my_bar.progress(percent_complete + 1)    
-    texto.empty()
-    return my_bar
-
-# Funcao barra progresso
-def ProgressoDados():
-    texto = st.empty()
-    texto.markdown(f"<h2 style='text-align: center;'>Carregando os dados...  </h2>",
-                unsafe_allow_html=True)
-    my_bar = st.progress(0)
-    for percent_complete in range(100):
-        time.sleep(0.1)
-        my_bar.progress(percent_complete + 1)    
-    texto.empty()
-    return my_bar
-
 # Funcao metricas
 def Metricas(mse, r2):
     col1, col2 = st.columns(2)
@@ -170,7 +170,7 @@ projeto = st.sidebar.selectbox('Projeto', ('Documentação', 'Mapas', 'Previsão
 # Pagina documentacao
 if projeto == 'Documentação':
     st.markdown("<h1 style='text-align: center;'>Observatório sismológico</h1>", unsafe_allow_html=True)
-    st.image("https://i.ibb.co/gwyKVGQ/002-1-1.png", caption = 'Ilustração da cidade de Lisboa após o terremoto em 1755')
+    st.image("https://i.ibb.co/4tnS9bb/imagem-terremoto-lisboa.png", caption = 'Ilustração da cidade de Lisboa após o terremoto em 1755')
 
     # Dividindo a pagina em tres colunas
     col1, col2, col3 = st.columns(3)
@@ -178,25 +178,41 @@ if projeto == 'Documentação':
         st.markdown("""<p align='justify';'>
                Os fenômenos naturais que se originam por meio de tremores terrestre ocorrem desde o início do planeta. Desde então a humanidade sofria com as consequências de tais fenômenos, dos quais são capazes de mudar paisagens, clima, mortes e diversos outros fatores. Entretanto, os terremotos começaram a ser analisados cientificamente apenas após o terremoto que devastou Lisboa, em 1755. Considerado um dos terremotos mais fortes que atingiu a Europa, e segundo os sismólogos modernos, o tremor foi capaz de atingir uma magnitude de 9 na escala Richter, do qual gerou um tsunami e por fim tirou a vida de certa de 100 mil pessoas. Uma das consequências desse forte terremoto foi o interesse da ciência sobre a sismologia, ciência da qual era pouco explorada até a época. </p>""",
                 unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'>
-                A sismologia visa o estudo dos sismos (ou terremotos) e, genericamente, dos diversos movimentos que ocorrem na superfície do globo terrestre. Esta ciência busca conhecer e determinar em que circunstâncias ocorrem os sismos naturais assim como suas causas, de modo a prevê-los em tempo e espaço. Portanto, por meio dessa ciência, é possível analisar dados gerados de diversos observatórios sismológicos e sensores sismógrafos a fim de entender os tremores terrestres, as causas e impactos diretos na sociedade, havendo até a possibilidade de prevê-los em alguns casos dependendo dos dados gerados.</p>""",
-                unsafe_allow_html=True)
+        # st.markdown("""<p align='justify';'>
+        #         A sismologia visa o estudo dos sismos (ou terremotos) e, genericamente, dos diversos movimentos que ocorrem na superfície do globo terrestre. Esta ciência busca conhecer e determinar em que circunstâncias ocorrem os sismos naturais assim como suas causas, de modo a prevê-los em tempo e espaço. Portanto, por meio dessa ciência, é possível analisar dados gerados de diversos observatórios sismológicos e sensores sismógrafos a fim de entender os tremores terrestres, as causas e impactos diretos na sociedade, havendo até a possibilidade de prevê-los em alguns casos dependendo dos dados gerados. Dessa forma, o observatório tenta auxiliar na visualização e predição da magnitude dos sismos atráves de métodos estatísticos.</p>""",
+        #         unsafe_allow_html=True)
 
     with col2:
+        # st.markdown("""<p align='justify';'>
+        #         As análises realizadas na implementação desse portal considera diversos conceitos e métodos de estatística como análise exploratória, inferência, modelagem e predição de dados em materiais de referência. Da mesma forma, procurou-se na literatura estudos relacionados que abordavam temas semelhantes ao aplicado no observatório sismológico. </p>""",
+        #         unsafe_allow_html=True)
+
         st.markdown("""<p align='justify';'>
-                Com o passar dos anos e o avanço da tecnologia, houve a criação e implementação de sensores em locais com risco de desastres naturais para a verificação de riscos e coleta dos dados. Dessa forma, uma vasta quantidade de dados é gerada diariamente, principalmente quando há situações de tremores, seja em razão de terremotos, erupções, ou até mesmo de ações humanas como acontece em alguns tipos de explosões. Portanto, a criação de um observatório sobre tremores e a predição da magnitude de determinada vibração terrestre, dado a localidade (Por meio da latitude e longitude), torna-se interessante para o monitoramento de tais fenômenos.</p>""",
-                unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'>
-                A referência mundial em relação ao monitoramento global de tremores terrestre acontece por meio do Serviço Geológico dos Estados Unidos (USGS). Dessa forma, em seu site é disponibilizado uma API pública para a consulta dos dados, do qual pode ser acessada por diversas formas.</p>""",
-                unsafe_allow_html=True)
+            A sismologia visa o estudo dos sismos (ou terremotos) e, genericamente, dos diversos movimentos que ocorrem na superfície do globo terrestre. Esta ciência busca conhecer e determinar em que circunstâncias ocorrem os sismos naturais assim como suas causas, de modo a prevê-los em tempo e espaço. Portanto, por meio dessa ciência, é possível analisar dados gerados de diversos observatórios sismológicos e sensores sismógrafos a fim de entender os tremores terrestres, as causas e impactos diretos na sociedade, havendo até a possibilidade de prevê-los em alguns casos dependendo dos dados gerados. Dessa forma, o observatório tenta auxiliar na visualização e predição da magnitude dos sismos atráves de modelos estatísticos e robustos métodos computacionais.</p>""",
+            unsafe_allow_html=True)
+
+        # st.markdown("""<p align='justify';'>
+        #         Mondol (2021) reflete sobre um método viável e preciso para a previsão de terremotos tem o potencial de salvar incontáveis vidas humanas. O  autor aborda diversos métodos estatísticos para prever a magnitude e profundidade dos terremotos. Por fim, chega-se a conclusão que é muito difícil prever com precisão a magnitude de terremotos, no entanto, métodos de predição como regressão polinomial e floresta aleatório obtiveram resultados interessantes nas predições. </p>""",
+        #         unsafe_allow_html=True)
+
+        # st.markdown("""<p align='justify';'>
+        #         Geller (1997) expõe em seu texto que variáveis como hora, localização e a magnitude não conseguem realizar previsões de forma confiável e precisa. Citando resultados recentes da física de sistemas não lineares “teoria do caos”, argumentam que qualquer pequeno terremoto tem alguma hipótese de entrar em cascata num grande evento. Conforme a investigação citada pelos autores, se isto acontece ou não depende de detalhes incomensuráveis das condições no interior da Terra. Os terremotos são, portanto, intrinsecamente imprevisíveis. </p>""",
+        #         unsafe_allow_html=True)
         
     with col3:
         st.markdown("""<p align='justify';'>
-                Esse projeto utiliza ferramentas de mineração, coleta, visualização dos dados, criação de modelos preditivos e implementação. Os dados utilizados nos mapas a seguir são oriundos de uma API disponibilizada pelo Serviço Geológico dos Estados Unidos (USGS). A etapa de coleta dos dados foi realizado por meio da linguagem de programação Python, da qual se arquitetou o tratamento dos dados para a extração das variáveis pertinentes. Da mesma forma, a etapa de visualização dos dados e implementação se desenvolveram por meio da linguagem Python.</p>""",
+                A referência mundial em relação ao monitoramento global de tremores terrestre acontece por meio do Serviço Geológico dos Estados Unidos (USGS). Dessa forma, no site é disponibilizado uma API pública para a consulta dos dados, do qual pode ser acessada por diversas formas. Portanto, esse trabalho faz a consulta dos dados de acordo com os filtros aplicado. Vale ressaltar que existe um limite de 20.000 dados por requisição, caso o filtro exceda esse limite, são coletados apenas os primeiros 20.000 sismos referente ao filtro. Para a melhor visualização e coleta dos dados referentes aos terremotos, foi fixado o limite de terremotos com magnitude mínima igual a 4 graus na escala Ritcher, não sendo possível visualizar sismos menores.</p>""",
                 unsafe_allow_html=True)
-        st.markdown("""<p align='justify';'>
-                Esse estudo utiliza dados da API pública citada em formato JSON, coletando dados de tremores que tiveram magnitude maior ou igual a 2. Vale ressaltar que a API possui um limite de apenas 20.000 registros por requisição. Consequentemente, será necessário fazer mais de uma consulta para coletar todos os dados do período citado na introdução.</p>""",
-                unsafe_allow_html=True)
+
+    st.markdown("""<p align='justify'; font-size:10px '>
+    <br>
+    <br>
+    Documentação oficial e código-fonte do observatório sismológico:  <a href='https://github.com/victoresende19/earthquakes'>Observatório sismológico repositório</a> </p>""",
+    unsafe_allow_html=True)
+
+    st.markdown("""<p align='justify'; font-size:10px '>
+        Victor Resende &trade;<br>Brazil - 2022 </p>""",
+        unsafe_allow_html=True)
     
 # Pagina mapas
 elif projeto == 'Mapas':
@@ -226,7 +242,7 @@ elif projeto == 'Mapas':
     df = df[df.Tipo == visualizacaoTremor]
 
     # Barra de progresso
-    ProgressoDados().empty()
+    ProgressoML().empty()
 
     # Demonstração dos gráficos após os inputs
     dataInicio = startTime.strftime("%d/%m/%Y")
@@ -252,10 +268,10 @@ elif projeto == 'Mapas':
 elif projeto == 'Previsão':
 
     # Barra de progresso
-    ProgressoDados().empty()
     st.markdown("<h1 style='text-align: center; color: black;'>Previsão de terremotos</h1>", unsafe_allow_html=True) 
-    st.markdown("<h3 style='text-align: center; color: black;'>Longitude e Profundidade</h3>", unsafe_allow_html=True) 
-    st.markdown("<p style='text-align: left; color: red;'><strong>Observação</strong>: Os dados serão coletados e o modelo treinado de acordo com os filtros escolhidos</p>", unsafe_allow_html=True)
+    #st.markdown("<h3 style='text-align: center; color: black;'>Longitude e Profundidade</h3>", unsafe_allow_html=True) 
+
+    st.markdown("<p style='text-align: left; color: black;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se floresta aleatória, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
     
     # Filtros
     col1, col2= st.columns(2)
@@ -270,22 +286,26 @@ elif projeto == 'Previsão':
         form2 = st.form(key='my_form2')
         Profundidade = form2.slider('Profundidade: ', min_value = 10, max_value = 400, value = 53)
         submit_button = form2.form_submit_button(label='Aplicar filtros')
-
+    st.markdown("<p style='text-align: left; color: red;'><strong>Observação</strong>: A previsão é realizada de acordo com os dados do período de 15/12/2021 a 10/06/2022</p>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: left; color: black;'>Caso o epicentro de um terremoto tenha profundidade {Profundidade} (em km) e a longitude seja {Longitude}, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
+   
     # Dataframe
-    ProgressoML().empty() # Barra de progresso
     startTime =  datetime.date(2021, 1, 1)
     endTime =  datetime.date(2022, 6, 10)
+
     data = Dados(startTime, endTime, magnitude_desejada = 2)
     df = ManipulacaoDados(data)
 
+    #ProgressoML().empty() # Barra de progresso
     # Modelo
-    ProgressoML().empty() # Barra de progresso
     X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor = Previsao(df)
     # R2
     score_stand_ran = regressor.score(X_stand_test, y_test)
     # MSE
     mse = mean_squared_error(y_test, y_pred)
     previsao = np.array([Longitude, Profundidade]).reshape(-1, 2)
-    st.markdown(f"<h3 style='text-align: left; color: black;'>Previsão da magnitude: {round(regressor.predict(previsao)[0], 2)} graus na escala Ritcher </h3>", unsafe_allow_html=True)
+
+    st.markdown(f"<h4 style='text-align: left; color: black;'>Previsão da magnitude: {round(regressor.predict(previsao)[0], 2)} graus na escala Ritcher </h4>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; color: black;'>As métricas utilizadas para a avaliação da floresta aleatória são o R², ou coeficiente de determinação, do qual demonstra quão explicativa o modelo é ,variando entre 0 a 1. Já o MSE, ou erro médio quadrático, representa os erros associados de cada observação treinada em relação ao valor predito. </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>R²</strong>: {round(score_stand_ran, 2)} </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>MSE</strong>: {round(mse, 2)} </p>", unsafe_allow_html=True)
