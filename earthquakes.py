@@ -293,7 +293,7 @@ elif projeto == 'Previsão':
     endTime =  datetime.date(2022, 6, 10).strftime("%d/%m/%Y")
 
     st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação</strong>: A previsão é realizada de acordo com os dados do período de {startTime} a {endTime}</p>", unsafe_allow_html=True)
-    st.markdown(f"<h4 style='text-align: left; color: black;'>Caso o epicentro de um terremoto tenha profundidade {Profundidade} (em km) e a longitude seja {Longitude}, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
+    st.markdown(f"<h4 style='text-align: left; color: black;'>Caso a longitude em que o terremoto ocorra seja {Longitude} e o epicentro tenha profundidade de {Profundidade} em km, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
    
 
 
