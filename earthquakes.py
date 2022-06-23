@@ -180,44 +180,27 @@ if projeto == 'Documentação':
         st.markdown("""<p align='justify';'>
                Os fenômenos naturais que se originam por meio de tremores terrestre ocorrem desde o início do planeta. Desde então a humanidade sofria com as consequências de tais fenômenos, dos quais são capazes de mudar paisagens, clima, mortes e diversos outros fatores. Entretanto, os terremotos começaram a ser analisados cientificamente apenas após o terremoto que devastou Lisboa, em 1755. Considerado um dos terremotos mais fortes que atingiu a Europa, e segundo os sismólogos modernos, o tremor foi capaz de atingir uma magnitude de 9 na escala Richter, do qual gerou um tsunami e por fim tirou a vida de certa de 100 mil pessoas. Uma das consequências desse forte terremoto foi o interesse da ciência sobre a sismologia, ciência da qual era pouco explorada até a época. </p>""",
                 unsafe_allow_html=True)
-        # st.markdown("""<p align='justify';'>
-        #         A sismologia visa o estudo dos sismos (ou terremotos) e, genericamente, dos diversos movimentos que ocorrem na superfície do globo terrestre. Esta ciência busca conhecer e determinar em que circunstâncias ocorrem os sismos naturais assim como suas causas, de modo a prevê-los em tempo e espaço. Portanto, por meio dessa ciência, é possível analisar dados gerados de diversos observatórios sismológicos e sensores sismógrafos a fim de entender os tremores terrestres, as causas e impactos diretos na sociedade, havendo até a possibilidade de prevê-los em alguns casos dependendo dos dados gerados. Dessa forma, o observatório tenta auxiliar na visualização e predição da magnitude dos sismos atráves de métodos estatísticos.</p>""",
-        #         unsafe_allow_html=True)
 
     with col2:
-        # st.markdown("""<p align='justify';'>
-        #         As análises realizadas na implementação desse portal considera diversos conceitos e métodos de estatística como análise exploratória, inferência, modelagem e predição de dados em materiais de referência. Da mesma forma, procurou-se na literatura estudos relacionados que abordavam temas semelhantes ao aplicado no observatório sismológico. </p>""",
-        #         unsafe_allow_html=True)
-
         st.markdown("""<p align='justify';'>
             A sismologia visa o estudo dos sismos (ou terremotos) e, genericamente, dos diversos movimentos que ocorrem na superfície do globo terrestre. Esta ciência busca conhecer e determinar em que circunstâncias ocorrem os sismos naturais assim como suas causas, de modo a prevê-los em tempo e espaço. Portanto, por meio dessa ciência, é possível analisar dados gerados de diversos observatórios sismológicos e sensores sismógrafos a fim de entender os tremores terrestres, as causas e impactos diretos na sociedade, havendo até a possibilidade de prevê-los em alguns casos dependendo dos dados gerados. Dessa forma, o observatório tenta auxiliar na visualização e predição da magnitude dos sismos atráves de modelos estatísticos e robustos métodos computacionais.</p>""",
             unsafe_allow_html=True)
-
-        # st.markdown("""<p align='justify';'>
-        #         Mondol (2021) reflete sobre um método viável e preciso para a previsão de terremotos tem o potencial de salvar incontáveis vidas humanas. O  autor aborda diversos métodos estatísticos para prever a magnitude e profundidade dos terremotos. Por fim, chega-se a conclusão que é muito difícil prever com precisão a magnitude de terremotos, no entanto, métodos de predição como regressão polinomial e floresta aleatório obtiveram resultados interessantes nas predições. </p>""",
-        #         unsafe_allow_html=True)
-
-        # st.markdown("""<p align='justify';'>
-        #         Geller (1997) expõe em seu texto que variáveis como hora, localização e a magnitude não conseguem realizar previsões de forma confiável e precisa. Citando resultados recentes da física de sistemas não lineares “teoria do caos”, argumentam que qualquer pequeno terremoto tem alguma hipótese de entrar em cascata num grande evento. Conforme a investigação citada pelos autores, se isto acontece ou não depende de detalhes incomensuráveis das condições no interior da Terra. Os terremotos são, portanto, intrinsecamente imprevisíveis. </p>""",
-        #         unsafe_allow_html=True)
         
     with col3:
         st.markdown("""<p align='justify';'>
                 A referência mundial em relação ao monitoramento global de tremores terrestre acontece por meio do Serviço Geológico dos Estados Unidos (USGS). Dessa forma, no site é disponibilizado uma API pública para a consulta dos dados, do qual pode ser acessada por diversas formas. Portanto, esse trabalho faz a consulta dos dados de acordo com os filtros aplicado. Vale ressaltar que existe um limite de 20.000 dados por requisição, caso o filtro exceda esse limite, são coletados apenas os primeiros 20.000 sismos referente ao filtro. Para a melhor visualização e coleta dos dados referentes aos terremotos, foi fixado o limite de terremotos com magnitude mínima igual a 4 graus na escala Ritcher, não sendo possível visualizar sismos menores.</p>""",
                 unsafe_allow_html=True)
 
-    st.markdown("""<p align='justify'; font-size:10px '>
-    <br>
-    <br>
-    Documentação oficial e código-fonte do observatório sismológico:  <a href='https://github.com/victoresende19/earthquakes'>Observatório sismológico repositório</a> </p>""",
+    st.markdown("""<p align='justify'; font-size:10px '><br><br>Documentação oficial e código-fonte do observatório sismológico:  <a href='https://github.com/victoresende19/earthquakes'>Observatório sismológico repositório</a> </p>""",
     unsafe_allow_html=True)
 
-    st.markdown("""<p align='justify'; font-size:10px '>
-        Victor Resende &trade;<br>Brazil - 2022 </p>""",
-        unsafe_allow_html=True)
+    st.markdown("""<p align='justify'; font-size:10px '>Victor Resende &trade;<br>Brazil - 2022 </p>""", unsafe_allow_html=True)
     
 # Pagina mapas
 elif projeto == 'Mapas':
+    
+    # Barra de progresso e limpeza da tela
+    ProgressoDados().empty()
 
     # Filtros
     form = st.sidebar.form(key='my_form')
@@ -231,7 +214,6 @@ elif projeto == 'Mapas':
     projecoes = form.selectbox('Tipo de projeção:',
         ('natural earth', 'mercator', 'equirectangular', 'orthographic', 'kavrayskiy7', 'miller', 'robinson', 'eckert4', 'azimuthal equal area', 'azimuthal equidistant', 'conic equal area',
         'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal')) 
-    #ProgressoDados().empty()
     submit_button = form.form_submit_button(label='Aplicar filtros')
     
     # Dados
@@ -270,8 +252,9 @@ elif projeto == 'Mapas':
 # Pagina previsao
 elif projeto == 'Previsão':
 
-    #ProgressoDados().empty()
-    # Barra de progresso
+    # Barra de progresso e limpeza da tela
+    ProgressoDados().empty()
+
     st.markdown("<h1 style='text-align: center; color: black;'>Previsão de terremotos</h1>", unsafe_allow_html=True) 
     st.markdown("<p style='text-align: left; color: black;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se <strong>floresta aleatória</strong>, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
     
