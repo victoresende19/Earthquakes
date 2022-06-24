@@ -248,17 +248,11 @@ elif projeto == 'Previsão':
 
     startTime =  datetime.date(2015, 1, 1).strftime("%d/%m/%Y")
     endTime =  datetime.date(2022, 6, 10).strftime("%d/%m/%Y")
-    ProgressoDados().empty()
-    data = Dados(startTime, endTime, magnitude_desejada = 2)
-    df = ManipulacaoDados(data)
-
-    # Barra de progresso e limpeza da tela
-    #ProgressoDados().empty()
 
     st.markdown("<h1 style='text-align: center; color: black;'>Previsão de terremotos</h1>", unsafe_allow_html=True) 
     st.markdown("<p style='text-align: left; color: black;'>Como exposto por Geller (1997),  terremotos são desastres praticamente impossíveis de se prever dada sua natureza incerta. Entretanto, Mondol (2021) apresenta um estudo sobre variáveis e métodos para previsão da magnitude de um terremoto. Nesse último, o algoritmo de floresta aleatória obteve resultados interessantes quando alimentado por dados sobre profundidade dos terremotos.  </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; color: black;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se <strong>floresta aleatória</strong>, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
-    
+
     # Filtros
     col1, col2= st.columns(2)
     with col1:
@@ -270,7 +264,7 @@ elif projeto == 'Previsão':
     with col2:
         # Profundidade
         form2 = st.form(key='my_form2')
-        Profundidade = form2.slider('Profundidade: ', min_value = 10, max_value = 400, value = 53)
+        Profundidade = form2.slider('Profundidade: ', min_value = 5.0, max_value = 200.0, value = 15.0)
         submit_button = form2.form_submit_button(label='Aplicar filtros')
 
     startTime =  datetime.date(2015, 1, 1).strftime("%d/%m/%Y")
@@ -279,6 +273,10 @@ elif projeto == 'Previsão':
     st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (1)</strong>: A previsão é realizada de acordo com os dados do período de {startTime} a {endTime}</p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (2)</strong>: Ao aplicar os filtros a floresta aleatória é ativada e a magnitude do terremoto predita.</p>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: left; color: black;'>Caso a longitude em que o terremoto ocorra seja {Longitude} e o epicentro tenha profundidade de {Profundidade} km, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
+
+    ProgressoDados().empty()
+    data = Dados(startTime, endTime, magnitude_desejada = 2)
+    df = ManipulacaoDados(data)
 
     # Modelo
     X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor = Previsao(df)
