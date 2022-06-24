@@ -130,6 +130,8 @@ def Previsao(df):
     X_stand_train = ss.fit_transform(X_train)
     X_stand_test = ss.transform(X_test)
 
+    ProgressoML().empty()
+
     regressor = RandomForestRegressor()
 
     regressor.fit(X_stand_train, y_train)
