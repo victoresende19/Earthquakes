@@ -42,7 +42,7 @@ def ProgressoML():
                 unsafe_allow_html=True)
     my_bar = st.progress(0)
     for percent_complete in range(100):
-        time.sleep(0.001)
+        time.sleep(0.1)
         my_bar.progress(percent_complete + 1)    
     texto.empty()
     return my_bar
@@ -54,40 +54,21 @@ def ProgressoDados():
                 unsafe_allow_html=True)
     my_bar = st.progress(0)
     for percent_complete in range(100):
-        time.sleep(0.01)
+        time.sleep(0.1)
         my_bar.progress(percent_complete + 1)    
     texto.empty()
     return my_bar
 
 #Acessando a API
-#@st.cache(show_spinner = True)
+@st.cache()
 def Dados(startTime, endTime, magnitude_desejada):
     url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
     response = urllib.request.urlopen(url).read()
     data = json.loads(response.decode('utf-8'))
     return data
 
-def Previsao(df):
-    cols =  ['Longitude', 'Profundidade']
-    X = df.loc[:, cols].values
-    y = df.loc[:, 'Magnitude'].values
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 0)
-
-    ss = StandardScaler()
-    X_stand_train = ss.fit_transform(X_train)
-    X_stand_test = ss.transform(X_test)
-
-    regressor = RandomForestRegressor()
-
-    regressor.fit(X_stand_train, y_train)
-    y_pred = regressor.predict(X_stand_test)
-    ProgressoML().empty()
-    return X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor
-
-
 #Manipulando os dados
-#@st.cache(show_spinner = True)
+@st.cache()
 def ManipulacaoDados(data):
     magnitude = []
     for mag in data['features']:
@@ -137,6 +118,23 @@ def ManipulacaoDados(data):
     df = df.sort_values(by=['Timestamp'], ascending=False)
 
     return df
+
+def Previsao(df):
+    cols =  ['Longitude', 'Profundidade']
+    X = df.loc[:, cols].values
+    y = df.loc[:, 'Magnitude'].values
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state = 0)
+
+    ss = StandardScaler()
+    X_stand_train = ss.fit_transform(X_train)
+    X_stand_test = ss.transform(X_test)
+
+    regressor = RandomForestRegressor()
+
+    regressor.fit(X_stand_train, y_train)
+    y_pred = regressor.predict(X_stand_test)
+    return X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor
 
 # Funcao metricas
 def Metricas(mse, r2):
@@ -248,6 +246,12 @@ elif projeto == 'Mapas':
 # Pagina previsao
 elif projeto == 'Previsão':
 
+    startTime =  datetime.date(2015, 1, 1).strftime("%d/%m/%Y")
+    endTime =  datetime.date(2022, 6, 10).strftime("%d/%m/%Y")
+    ProgressoDados().empty()
+    data = Dados(startTime, endTime, magnitude_desejada = 2)
+    df = ManipulacaoDados(data)
+
     # Barra de progresso e limpeza da tela
     #ProgressoDados().empty()
 
@@ -275,12 +279,6 @@ elif projeto == 'Previsão':
     st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (1)</strong>: A previsão é realizada de acordo com os dados do período de {startTime} a {endTime}</p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (2)</strong>: Ao aplicar os filtros a floresta aleatória é ativada e a magnitude do terremoto predita.</p>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: left; color: black;'>Caso a longitude em que o terremoto ocorra seja {Longitude} e o epicentro tenha profundidade de {Profundidade} km, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
-   
-
-
-    data = Dados(startTime, endTime, magnitude_desejada = 2)
-    df = ManipulacaoDados(data)
-    ProgressoDados().empty()
 
     # Modelo
     X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor = Previsao(df)
