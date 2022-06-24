@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 
 import datetime
+import pytz
 import time
 
 import urllib.request
@@ -176,7 +177,7 @@ if projeto == 'Documentação':
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown("""<p align='justify';'>
-               Os fenômenos naturais que se originam por meio de tremores terrestre ocorrem desde o início do planeta. Desde então a humanidade sofria com as consequências de tais fenômenos, dos quais são capazes de mudar paisagens, clima, mortes e diversos outros fatores. Entretanto, os terremotos começaram a ser analisados cientificamente apenas após o terremoto que devastou Lisboa, em 1755. Considerado um dos terremotos mais fortes que atingiu a Europa, e segundo os sismólogos modernos, o tremor foi capaz de atingir uma magnitude de 9 na escala Richter, do qual gerou um tsunami e por fim tirou a vida de certa de 100 mil pessoas. Uma das consequências desse forte terremoto foi o interesse da ciência sobre a sismologia, ciência da qual era pouco explorada até a época. </p>""",
+               Os fenômenos naturais que se originam por meio de tremores terrestre ocorrem desde o início do planeta. Desde então a humanidade sofria com as consequências de tais fenômenos, dos quais são capazes de causar mortes, mudar paisagens e diversos outros fatores. Entretanto, os terremotos começaram a ser analisados cientificamente apenas após o terremoto que devastou Lisboa, em 1755. Considerado um dos terremotos mais fortes que atingiu a Europa, e segundo os sismólogos modernos, o tremor foi capaz de atingir uma magnitude de 9 na escala Richter, do qual gerou um tsunami e por fim tirou a vida de certa de 100 mil pessoas. Uma das consequências desse forte terremoto foi o interesse da ciência sobre a sismologia, ciência da qual era pouco explorada até a época. </p>""",
                 unsafe_allow_html=True)
 
     with col2:
@@ -186,10 +187,10 @@ if projeto == 'Documentação':
         
     with col3:
         st.markdown("""<p align='justify';'>
-                A referência mundial em relação ao monitoramento global de tremores terrestre acontece por meio do Serviço Geológico dos Estados Unidos (USGS). Dessa forma, no site é disponibilizado uma API pública para a consulta dos dados, do qual pode ser acessada por diversas formas. Portanto, esse trabalho faz a consulta dos dados de acordo com os filtros aplicado. Vale ressaltar que existe um limite de 20.000 dados por requisição, caso o filtro exceda esse limite, são coletados apenas os primeiros 20.000 sismos referente ao filtro. Para a melhor visualização e coleta dos dados referentes aos terremotos, foi fixado o limite de terremotos com magnitude mínima igual a 4 graus na escala Ritcher, não sendo possível visualizar sismos menores.</p>""",
+                A referência mundial em relação ao monitoramento global de tremores terrestre acontece por meio do Serviço Geológico dos Estados Unidos (USGS). Dessa forma, no site é disponibilizado uma API pública para a consulta dos dados, do qual pode ser acessada por diversas formas. Portanto, o observatório sismológico faz a consulta dos dados de acordo com os filtros aplicado. Vale ressaltar que existe um limite de 20.000 dados por requisição, caso os filtros excedam esse limite, são coletados apenas os primeiros 20.000 sismos referente as datas escolhidas. Para a melhor visualização e coleta dos dados referentes aos terremotos, foi fixado o limite de terremotos com magnitude mínima igual a 4 graus na escala Ritcher, não sendo possível visualizar sismos menores.</p>""",
                 unsafe_allow_html=True)
 
-    st.markdown("""<p align='justify'; font-size:10px '><br><br>Documentação oficial e código-fonte do observatório sismológico:  <a href='https://github.com/victoresende19/earthquakes'>Observatório sismológico repositório</a> </p>""",
+    st.markdown("""<p align='justify'; font-size:10px '><br><br><br>Documentação oficial e código-fonte do observatório sismológico:  <a href='https://github.com/victoresende19/earthquakes'>Observatório sismológico repositório</a> </p>""",
     unsafe_allow_html=True)
 
     st.markdown("""<p align='justify'; font-size:10px '>Victor Resende &trade;<br>Brazil - 2022 </p>""", unsafe_allow_html=True)
@@ -197,10 +198,12 @@ if projeto == 'Documentação':
 # Pagina mapas
 elif projeto == 'Mapas':
 
+    my_date = datetime.datetime.now(pytz.timezone('America/Sao_Paulo'))
+
     # Filtros
     form = st.sidebar.form(key='my_form')
-    startTime = form.date_input("Data inicial (ano/mês/dia):", datetime.date(2015, 1, 1), min_value = datetime.date(1960, 1, 1))
-    endTime = form.date_input("Data final (ano/mês/dia):", datetime.date(2022, 6, 10))
+    startTime = form.date_input("Data inicial (ano/mês/dia):", datetime.date(2020, 1, 1), min_value = datetime.date(1960, 1, 1))
+    endTime = form.date_input("Data final (ano/mês/dia):", datetime.datetime.now(pytz.timezone('America/Sao_Paulo')))
     magMinima = 4
     magnitude_desejada = form.slider('Magnitude mínima:', magMinima, 10, 5)
     paginaContinentes = form.selectbox('Selecione a região de pesquisa', [ 'world', 'africa', 'north america', 'south america', 'asia', 'europe'])
@@ -236,7 +239,7 @@ elif projeto == 'Mapas':
     st.plotly_chart(Mapa(paginaContinentes, df), use_container_width=True)
 
     # Volume dos dados
-    st.markdown(f"<h4 style='text-align: center; font-size:16px'>Volume de dados pesquisados ({df.shape[0]})</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: center; font-size:16px'>Quantidade de terremotos: {df.shape[0]}</h4>", unsafe_allow_html=True)
 
     # Observacoes
     st.markdown(f"<p style='text-align: left; font-size:16px; color:red'><strong>Observação (1):</strong> Caso o range de data escolhido tenha mais de 20.000 dados, esse é o limite que será utilizado no gráfico.</p>", unsafe_allow_html=True)
@@ -270,7 +273,7 @@ elif projeto == 'Previsão':
     endTime =  datetime.date(2022, 6, 10).strftime("%d/%m/%Y")
 
     st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (1)</strong>: A previsão é realizada de acordo com os dados do período de {startTime} a {endTime}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (2)</strong>: Ao aplicar os filtros a floresta aleatória é ativada e a magnitude do terremoto é predito.</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (2)</strong>: Ao aplicar os filtros a floresta aleatória é ativada e a magnitude do terremoto predita.</p>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: left; color: black;'>Caso a longitude em que o terremoto ocorra seja {Longitude} e o epicentro tenha profundidade de {Profundidade} km, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
    
 
