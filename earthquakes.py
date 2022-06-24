@@ -21,6 +21,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
+import joblib
 ###############################################################################################################################################################################################################
 #                                                                                                Funções
 ###############################################################################################################################################################################################################
@@ -137,6 +138,12 @@ def Previsao(df):
     regressor.fit(X_stand_train, y_train)
     y_pred = regressor.predict(X_stand_test)
     return X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor
+
+    # loading model exported
+    # model = joblib.load('regressorModel')
+    # score = model.score(long, profun)
+    # new_array = np.array([long, profun]).reshape(-1, 2)
+    # return model.predict(new_array), score
 
 # Funcao metricas
 def Metricas(mse, r2):
@@ -282,12 +289,15 @@ elif projeto == 'Previsão':
 
     # Modelo
     X_stand_train, X_stand_test, y_train, y_test, y_pred, regressor = Previsao(df)
+    previsao = np.array([Longitude, Profundidade]).reshape(-1, 2)
+    #previsao, score = Previsao(Longitude, Profundidade)
+
     # R2
     score_stand_ran = regressor.score(X_stand_test, y_test)
     # MSE
     mse = mean_squared_error(y_test, y_pred)
-    previsao = np.array([Longitude, Profundidade]).reshape(-1, 2)
 
+    #st.markdown(f"<h4 style='text-align: left; color: black;'>Previsão da magnitude: {round(previsao[0], 2)} graus na escala Ritcher </h4>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: left; color: black;'>Previsão da magnitude: {round(regressor.predict(previsao)[0], 2)} graus na escala Ritcher </h4>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; color: black;'>As métricas utilizadas para a avaliação da floresta aleatória são o R², ou coeficiente de determinação, do qual demonstra quão explicativo o modelo é, variando entre 0 a 1. Já o MSE, ou erro médio quadrático, representa os erros associados de cada observação treinada em relação ao valor predito. </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: black;'><strong>R²</strong>: {round(score_stand_ran, 2)} </p>", unsafe_allow_html=True)
