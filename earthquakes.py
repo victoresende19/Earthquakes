@@ -60,7 +60,7 @@ def ProgressoDados():
     return my_bar
 
 #Acessando a API
-@st.cache()
+@st.cache(show_spinner = False)
 def Dados(startTime, endTime, magnitude_desejada):
     url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
     response = urllib.request.urlopen(url).read()
@@ -68,7 +68,7 @@ def Dados(startTime, endTime, magnitude_desejada):
     return data
 
 #Manipulando os dados
-@st.cache()
+@st.cache(show_spinner = False)
 def ManipulacaoDados(data):
     magnitude = []
     for mag in data['features']:
