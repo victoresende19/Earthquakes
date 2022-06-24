@@ -171,7 +171,7 @@ def Mapa(regiao, df):
 #                                                                                                Streamlit
 ###############################################################################################################################################################################################################
 Tema()
-st.set_page_config(layout="wide", initial_sidebar_state='expanded')
+st.set_page_config(layout="wide", initial_sidebar_state='expanded', page_icon = '🌎', page_title = 'Observatório sismológico')
 st.sidebar.markdown("<h1 style='text-align: center;'>Filtros de pesquisa</h1>", unsafe_allow_html=True)
 projeto = st.sidebar.selectbox('Projeto', ('Documentação', 'Mapas', 'Previsão'))
 
