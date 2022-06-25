@@ -121,7 +121,7 @@ def ManipulacaoDados(data):
     return df
 
 def Previsao():
-    df = pd.read_csv('Data exploration\earthquake-sample-predict.csv')
+    df = pd.read_csv('earthquake-sample-predict.csv')
 
     cols =  ['Longitude', 'Profundidade']
     X = df.loc[:, cols].values
