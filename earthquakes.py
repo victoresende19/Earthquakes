@@ -278,7 +278,7 @@ elif projeto == 'Previsão':
         Profundidade = form2.slider('Profundidade: ', min_value = 5.0, max_value = 200.0, value = 15.0)
         submit_button = form2.form_submit_button(label='Aplicar filtros')
 
-    st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (1)</strong>: A previsão é realizada de acordo com os dados do período de 10/06/2010 a 01/01/2015</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (1)</strong>: A previsão é realizada de acordo com os dados do período de 01/12/2021 a 06/09/2022</p>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: left; color: red;'><strong>Observação (2)</strong>: Ao aplicar os filtros a floresta aleatória é ativada e a magnitude do terremoto predita.</p>", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: left; color: black;'>Caso a longitude em que o terremoto ocorra seja {Longitude} e o epicentro tenha profundidade de {Profundidade} km, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
 
