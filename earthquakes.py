@@ -211,7 +211,7 @@ elif projeto == 'Mapas':
 
     # Filtros
     form = st.sidebar.form(key='my_form')
-    startTime = form.date_input("Data inicial (ano/mês/dia):", datetime.date(2020, 1, 1), min_value = datetime.date(1960, 1, 1))
+    startTime = form.date_input("Data inicial (ano/mês/dia):", datetime.date(2022, 1, 1), min_value = datetime.date(1960, 1, 1))
     endTime = form.date_input("Data final (ano/mês/dia):", datetime.datetime.now(pytz.timezone('America/Sao_Paulo')))
     magMinima = 4
     magnitude_desejada = form.slider('Magnitude mínima:', magMinima, 10, 5)
