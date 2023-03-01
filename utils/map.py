@@ -2,6 +2,7 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 from pandas import DataFrame
+import streamlit as st
 
 @st.cache_data(show_spinner="Consultando dados...", max_entries=500)
 def mapa(regiao: list[str], data: DataFrame, projecoes: list[str], visualizacaoPeriodo: str):
