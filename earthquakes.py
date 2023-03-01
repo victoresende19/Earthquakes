@@ -77,19 +77,19 @@ elif projeto == 'Previsão':
     startTime = datetime.date(2021, 1, 1)
     endTime = datetime.date(2023, 1, 1)
 
-    st.markdown("<h1 style='text-align: center; color: black;'>Previsão de terremotos</h1>", unsafe_allow_html=True) 
+    st.markdown("<h1 style='text-align: center; color: black;'>Previsão magnitude de terremotos</h1>", unsafe_allow_html=True) 
     st.markdown("<p style='text-align: left; color: black;'>Como exposto por Geller (1997),  terremotos são desastres praticamente impossíveis de se prever dada sua natureza incerta. Entretanto, Mondol (2021) apresenta um estudo sobre variáveis e métodos para previsão da magnitude de um terremoto. Nesse último, o algoritmo de floresta aleatória obteve resultados interessantes quando alimentado por dados sobre profundidade dos terremotos.  </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; color: black;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se <strong>floresta aleatória</strong>, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
 
     col1, col2= st.columns(2)
     with col1:
         form1 = st.form(key='my_form1')
-        longitude = form1.slider('Longitude: ', min_value = -174.0, max_value = 174.0, value = 142.0)
+        longitude = form1.slider('Longitude: ', min_value = -180.0, max_value = 180.0, value = 142.0)
         submit_button = form1.form_submit_button(label='Aplicar filtros')
     
     with col2:
         form2 = st.form(key='my_form2')
-        profundidade = form2.slider('Profundidade: ', min_value = 5.0, max_value = 200.0, value = 15.0)
+        profundidade = form2.slider('Profundidade: ', min_value = 5.0, max_value = 500.0, value = 15.0)
         submit_button = form2.form_submit_button(label='Aplicar filtros')
 
     st.markdown("<p style='text-align: left; color: red;'><strong>Observação (1)</strong>: A previsão é realizada de acordo com uma amostra representativa dos dados.", unsafe_allow_html=True)
