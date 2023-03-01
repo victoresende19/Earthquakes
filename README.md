@@ -1,5 +1,5 @@
 # earthquakes
-This repository aims to create a seismological observatory consuming USGS API data using python. The idea of this project is to collect seismological earthquake data above 3.5 degrees on the Richter scale from the period from 01/01/1970 to 2022. All the technical explanation about the process of creating this solution is on the PDF file that is in Portuguese.
+This repository aims to create a seismological observatory consuming USGS API data using python. All the technical explanation about the process of creating this solution is on the PDF file that is in Portuguese.
 
 <p align="center">
   <img src="https://news.northwestern.edu/assets/Images/2015/yoshimoto638__FitMaxWzk3MCw2NTBd.jpg" />
