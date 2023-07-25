@@ -24,7 +24,6 @@ def previsao(longitude: float, profundidade: float):
     Previsão do modelo.
     """
 
-    
     model = joblib.load('random-forest-model')
     previsao = model.predict(np.array([longitude, profundidade]).reshape(-1, 2))
     return previsao

@@ -9,7 +9,7 @@ from utils.model import previsao
 
 st.set_page_config(layout="wide", initial_sidebar_state='expanded', page_icon = '🌎', page_title = 'Observatório sismológico')
 st.sidebar.markdown("<h1 style='text-align: center;'>Filtros de pesquisa</h1>", unsafe_allow_html=True)
-projeto = st.sidebar.selectbox('Projeto', ('Documentação', 'Mapas', 'Previsão'))
+projeto = st.sidebar.selectbox('Projeto', ('Documentação', 'Mapa', 'Previsão magnitude'))
 
 # Pagina documentacao
 if projeto == 'Documentação':
@@ -36,7 +36,7 @@ if projeto == 'Documentação':
     st.markdown("""<p align='justify'; font-size:10px '>Victor Resende &trade;<br>Brazil - 2022 </p>""", unsafe_allow_html=True)
     
 # Pagina mapas
-elif projeto == 'Mapas':
+elif projeto == 'Mapa':
     form = st.sidebar.form(key='my_form')
     startTime = form.date_input("Data inicial (ano/mês/dia):", datetime.date(2022, 1, 1), min_value = datetime.date(1960, 1, 1))
     endTime = form.date_input("Data final (ano/mês/dia):", datetime.datetime.now(pytz.timezone('America/Sao_Paulo')))
@@ -68,11 +68,11 @@ elif projeto == 'Mapas':
         st.warning('Não existem dados para os filtros aplicados')
 
     st.markdown(f"<h4 style='text-align: center; font-size:16px'>Quantidade de terremotos: {terremotos.shape[0]}</h4>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: left; font-size:16px; color:red'><strong>Observação (1):</strong> Caso o range de data escolhido tenha mais de 20.000 dados, esse é o limite que será utilizado no gráfico.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; font-size:16px; color:red'><strong>Observação (1):</strong> Apesar do range de dados escolhido, a aplicação considera apenas os 20.000 primeiros dados referente a data de início.</p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; font-size:16px; color:red'> <strong>Observação (2):</strong> A quantidade de dados pesquisados pode afetar no tempo de execução da visualização.</p>", unsafe_allow_html=True)
 
 # Pagina previsao
-elif projeto == 'Previsão':
+elif projeto == 'Previsão magnitude':
 
     startTime = datetime.date(2021, 1, 1)
     endTime = datetime.date(2023, 1, 1)
@@ -81,16 +81,20 @@ elif projeto == 'Previsão':
     st.markdown("<p style='text-align: left; color: black;'>Como exposto por Geller (1997),  terremotos são desastres praticamente impossíveis de se prever dada sua natureza incerta. Entretanto, Mondol (2021) apresenta um estudo sobre variáveis e métodos para previsão da magnitude de um terremoto. Nesse último, o algoritmo de floresta aleatória obteve resultados interessantes quando alimentado por dados sobre profundidade dos terremotos.  </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; color: black;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se <strong>floresta aleatória</strong>, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
 
-    col1, col2= st.columns(2)
+    col1, col2, col3= st.columns(3)
     with col1:
-        form1 = st.form(key='my_form1')
-        longitude = form1.slider('Longitude: ', min_value = -180.0, max_value = 180.0, value = 142.0)
-        submit_button = form1.form_submit_button(label='Aplicar filtros')
+        st.write('')
     
     with col2:
-        form2 = st.form(key='my_form2')
-        profundidade = form2.slider('Profundidade: ', min_value = 5.0, max_value = 500.0, value = 15.0)
-        submit_button = form2.form_submit_button(label='Aplicar filtros')
+        form1 = st.form(key='my_form1')
+        longitude = form1.slider(
+            'Longitude: ', min_value=-180.0, max_value=180.0, value=142.0)
+        profundidade = form1.slider(
+            'Profundidade: ', min_value=5.0, max_value=500.0, value=15.0)
+        submit_button = form1.form_submit_button(label='Aplicar filtros')
+    
+    with col3:
+        st.write('')
 
     st.markdown("<p style='text-align: left; color: red;'><strong>Observação (1)</strong>: A previsão é realizada de acordo com uma amostra representativa dos dados.", unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: left; color: black;'>Caso a longitude em que o terremoto ocorra seja {longitude} e o epicentro tenha profundidade de {profundidade} km, quão alta a magnitude deste tremor seria?</h4>", unsafe_allow_html=True) 
