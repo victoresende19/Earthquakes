@@ -10,7 +10,7 @@ st.set_page_config(layout="wide", initial_sidebar_state='expanded',page_icon='馃
 mapa_sismos, predict, doc = st.tabs(["Mapa", "Predi莽茫o magnitude", "Documenta莽茫o"])
 
 with mapa_sismos:
-    st.markdown("<h1 style='text-align: center;'>Observat贸rio sismol贸gico</h1>",unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>SismoMap - Observat贸rio sismol贸gico</h1>",unsafe_allow_html=True)
     st.markdown("<h5 style='text-align: left;'>Caso deseje, aplique os filtros:</h5>",unsafe_allow_html=True)
 
     with st.form(key='my_form_map'):
