@@ -6,7 +6,7 @@ import datetime
 import numpy as np
 import streamlit as st
 
-st.set_page_config(layout="wide", initial_sidebar_state='expanded',page_icon='🌎', page_title='Observatório sismológico')
+st.set_page_config(layout="wide", initial_sidebar_state='expanded',page_icon='🌎', page_title='SismoMap')
 mapa_sismos, predict, doc = st.tabs(["Mapa", "Predição magnitude", "Documentação"])
 
 with mapa_sismos:
