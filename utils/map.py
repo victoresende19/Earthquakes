@@ -24,7 +24,7 @@ def mapa(regiao: list[str], data: DataFrame, projecoes: list[str], visualizacaoP
     Objetos plotly com o mapa interativo.
     """
 
-    mapa = px.scatter_geo(data_frame=data, lat="Latitude", lon="Longitude", color="Magnitude", size=data.Magnitude**10, size_max=60,
+    mapa = px.scatter_geo(data_frame=data, lat="Latitude", lon="Longitude", color="Magnitude", size=data.Magnitude**10, size_max=35,
                           projection=projecoes, color_continuous_scale=[
                               '#04290d', 'yellow', 'red'],
                           animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Year'), scope=regiao, width=900, height=600,
