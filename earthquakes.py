@@ -1,5 +1,5 @@
 from utils.model import previsao
-from utils.map import mapa
+from utils.map import mapa, regioes, projecoes_mapa
 from utils.etl import coleta_dados, manipula_dados, tipo_eventos
 import pytz
 import datetime
@@ -34,21 +34,19 @@ elif projeto == 'Mapa':
     endTime = form.date_input("Data final (ano/mês/dia):", datetime.date(2022, 1, 1), datetime.date(1960, 1, 1))
     magMinima = 4
     magnitudeUsuario = form.slider('Magnitude mínima:', magMinima, 10, 5)
-    paginaContinentes = form.selectbox('Selecione a região de pesquisa', ['world', 'africa', 'north america', 'south america', 'asia', 'europe'])
     data = coleta_dados(endTime, startTime, magnitudeUsuario)
     terremotos = manipula_dados(data)
     visualizacaoTremor = form.selectbox('Tipo de tremor:', list(terremotos['Tipo'].unique()))
+    paginaContinentes = form.selectbox('Selecione a região de pesquisa', list(regioes.keys()))
+    projecoes = form.selectbox('Tipo de projeção', list(projecoes_mapa.keys()))
     visualizacaoPeriodo = form.selectbox('Visualização por ano:', ('Não', 'Sim'))
-    projecoes = form.selectbox('Tipo de projeção',
-                            ('natural earth', 'mercator', 'equirectangular', 'orthographic', 'kavrayskiy7', 'miller', 'robinson', 'eckert4', 'azimuthal equal area', 'azimuthal equidistant', 'conic equal area',
-                                'conic conformal', 'conic equidistant', 'gnomonic', 'stereographic', 'mollweide', 'hammer', 'transverse mercator', 'albers usa', 'winkel tripel', 'aitoff', 'sinusoidal'))
     submit_button = form.form_submit_button(label='Aplicar filtros')
     st.markdown("<h1 style='text-align: center;'>Observatório sismológico</h1>",unsafe_allow_html=True)
     st.markdown(f"<h4 style='text-align: center; font-size:16px'>{startTime.strftime('%d/%m/%Y')} a {endTime.strftime('%d/%m/%Y')}</h4>", unsafe_allow_html=True)
 
     if len(terremotos) != 0:
         terremotos = terremotos[terremotos['Tipo'] == visualizacaoTremor]
-        st.plotly_chart(mapa(paginaContinentes, terremotos, projecoes, visualizacaoPeriodo),use_container_width=True)
+        st.plotly_chart(mapa(paginaContinentes, terremotos, projecoes, visualizacaoPeriodo), use_container_width=True)
     else:
         st.warning('Não existem dados para os filtros aplicados')
 
