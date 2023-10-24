@@ -40,13 +40,13 @@ def mapa(data: DataFrame, visualizacaoPeriodo: str,  projecoes: list[str] = None
                              color_continuous_scale=['#04290d', 'yellow', 'red'],
                              size=data.Magnitude**10,
                              size_max=35,
-                             zoom=1.7,
+                             zoom=1.8,
                              height=900,
                              width=800,
                              mapbox_style="open-street-map",
                              animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Ano'),
                              custom_data=["Timestamp", "Latitude", "Longitude", "Magnitude", "Ano"],
-                             center=dict(lon=200))
+                             center=dict(lon=150))
     mapa.update_layout(coloraxis_colorbar=dict(orientation='h', y=1, xanchor='center', yanchor='bottom', tickfont=dict(color='black'), title_font=dict(color='black')))
 
     # Personalizando o tooltip
