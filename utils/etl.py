@@ -95,9 +95,10 @@ def manipula_dados(data: dict):
     terremotos = pd.DataFrame.from_dict(dicionario_geral)
 
     # Ajustando variáveis de terremotos/tempo
-    terremotos.Timestamp = pd.to_datetime(terremotos.Timestamp, unit='ms')
-    terremotos['Ano'] = pd.to_datetime(terremotos.Timestamp).dt.year
+    terremotos['Timestamp'] = pd.to_datetime(terremotos['Timestamp'], unit='ms')
+    terremotos['Ano'] = pd.to_datetime(terremotos['Timestamp']).dt.year
     terremotos = terremotos.sort_values(by=['Timestamp'], ascending=False)
+    terremotos['Timestamp'] = terremotos['Timestamp'].dt.strftime('%m/%d/%Y - %H:%M')
     terremotos['Tipo'] = terremotos['Tipo'].map(tipo_eventos)
 
     return terremotos

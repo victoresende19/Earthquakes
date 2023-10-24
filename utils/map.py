@@ -5,7 +5,7 @@ from pandas import DataFrame
 import streamlit as st
 
 @st.cache_data(show_spinner="Consultando dados...", max_entries=500)
-def mapa(regiao: list[str], data: DataFrame, projecoes: list[str], visualizacaoPeriodo: str):
+def mapa(data: DataFrame, visualizacaoPeriodo: str,  projecoes: list[str] = None, regiao: list[str] = None):
     """
     Description
     -----------
@@ -24,23 +24,37 @@ def mapa(regiao: list[str], data: DataFrame, projecoes: list[str], visualizacaoP
     Objetos plotly com o mapa interativo.
     """
 
-    mapa = px.scatter_geo(data_frame=data, lat="Latitude", lon="Longitude", color="Magnitude", size=data.Magnitude**10, size_max=35,
-                          projection=projecoes_mapa[projecoes], color_continuous_scale=['#04290d', 'yellow', 'red'],
-                          animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Ano'), scope=regioes[regiao], width=900, height=600,
-                          custom_data=["Latitude", "Longitude", "Magnitude"])  
+    # mapa = px.scatter_geo(data_frame=data, lat="Latitude", lon="Longitude", color="Magnitude", size=data.Magnitude**10, size_max=35,
+    #                       projection=projecoes_mapa[projecoes], color_continuous_scale=['#04290d', 'yellow', 'red'],
+    #                       animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Ano'), scope=regioes[regiao], width=900, height=600,
+    #                       custom_data=["Latitude", "Longitude", "Magnitude"]) 
+    # if regiao == 'world':
+    #     # Ajustando rotação do globo
+    #     mapa.layout.geo.projection = {'rotation': {'lon': 200}, 'type': projecoes}
 
-    mapa.update_geos(showcountries=True)
 
-    if regiao == 'world':
-        # Ajustando rotação do globo
-        mapa.layout.geo.projection = {'rotation': {'lon': 200}, 'type': projecoes}
+    mapa = px.scatter_mapbox(data_frame=data,
+                             lat="Latitude",
+                             lon="Longitude",
+                             color="Magnitude",
+                             color_continuous_scale=['#04290d', 'yellow', 'red'],
+                             size=data.Magnitude**10,
+                             size_max=35,
+                             zoom=1.7,
+                             height=900,
+                             width=800,
+                             mapbox_style="open-street-map",
+                             animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Ano'),
+                             custom_data=["Timestamp", "Latitude", "Longitude", "Magnitude", "Ano"],
+                             center=dict(lon=200))
 
     # Personalizando o tooltip
     mapa.update_traces(
         hovertemplate='<br>'.join([
-            'Latitude: %{customdata[0]}',
-            'Longitude: %{customdata[1]}',
-            'Magnitude: %{customdata[2]}'
+            'Timestamp: %{customdata[0]}',
+            'Latitude: %{customdata[1]}',
+            'Longitude: %{customdata[2]}',
+            'Magnitude: %{customdata[3]}'
         ])
     )
 
