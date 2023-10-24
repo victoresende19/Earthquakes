@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 
 @st.cache_resource(show_spinner='Fazendo previsão...', max_entries=500)
-def previsao(longitude: float, profundidade: float):
+def previsao(latitude: float, longitude: float, profundidade: float):
     """
     Description
     -----------
@@ -25,5 +25,5 @@ def previsao(longitude: float, profundidade: float):
     """
 
     model = joblib.load('random-forest-model')
-    previsao = model.predict(np.array([longitude, profundidade]).reshape(-1, 2))
+    previsao = model.predict(np.array([latitude, longitude, profundidade]).reshape(-1, 3))
     return previsao

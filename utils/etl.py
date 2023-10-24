@@ -1,8 +1,9 @@
-import urllib.request
-import json
-import pandas as pd
-from datetime import datetime
 import streamlit as st
+from datetime import datetime
+import pandas as pd
+import json
+import urllib.request
+
 
 @st.cache_data(show_spinner="Consultando dados...", max_entries=500)
 def coleta_dados(startTime: datetime, endTime: datetime, magnitude_desejada: int):
@@ -97,5 +98,29 @@ def manipula_dados(data: dict):
     terremotos.Timestamp = pd.to_datetime(terremotos.Timestamp, unit='ms')
     terremotos['Ano'] = pd.to_datetime(terremotos.Timestamp).dt.year
     terremotos = terremotos.sort_values(by=['Timestamp'], ascending=False)
+    terremotos['Tipo'] = terremotos['Tipo'].map(tipo_eventos)
 
     return terremotos
+
+
+tipo_eventos = {
+    'earthquake': 'Terremoto',
+    'quarry blast': 'Explosão de pedreira',
+    'nuclear explosion': 'Explosão Nuclear',
+    'other event': 'Outro evento',
+    'explosion': 'Explosão',
+    'mine collapse': 'Colapso de mina',
+    'chemical explosion': 'Explosão química',
+    'rock burst': 'Explosão de rochas',
+    'sonic boom': 'Estrondo sônico',
+    'ice quake': 'Tremor de gelo',
+    'rock slide': 'Deslizamento de rochas',
+    'mining explosion': 'Explosão de mineração',
+    'landslide': 'Deslizamento de terra',
+    'acoustic noise': 'Ruído acústico',
+    'not reported': 'Não relatado',
+    'experimental explosion': 'Explosão experimental',
+    'collapse': 'Colapso',
+    'induced or triggered event': 'Evento induzido ou desencadeado',
+    'volcanic eruption': 'Erupção vulcânica'
+}
