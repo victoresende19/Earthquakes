@@ -14,7 +14,7 @@ mapa_sismos, predict, doc = st.tabs(["Mapa", "Predição magnitude", "Documenta�
 with mapa_sismos:
     st.markdown("<h5 style='text-align: left;'>Caso deseje, aplique os filtros:</h5>",unsafe_allow_html=True)
 
-    with st.form(key='my_form_map', clear_on_submit=True):
+    with st.form(key='my_form_map'):
         with st.expander("Filtros"):
             col1, col2 = st.columns(2)
 
@@ -27,16 +27,15 @@ with mapa_sismos:
 
             with col2:
                 endTime = st.date_input("Data final (ano/mês/dia):", datetime.date(2022, 1, 1), datetime.date(1960, 1, 1))
-                data = coleta_dados(endTime, startTime, magnitudeUsuario)
-                terremotos = manipula_dados(data)
-                visualizacaoTremor = st.selectbox('Tipo de tremor:', list(terremotos['Tipo'].unique()))
-            
+                visualizacaoTremor = st.selectbox('Tipo de tremor:', list(tipo_eventos.keys()))
+
+        data = coleta_dados(endTime, startTime, magnitudeUsuario, visualizacaoTremor)
+        terremotos = manipula_dados(data)
         submit_button = st.form_submit_button(label='Aplicar filtros')
 
     st.markdown(f"<h4 style='text-align: center; font-size:16px'>Terremotos ocorridos na data de {startTime.strftime('%d/%m/%Y')} a {endTime.strftime('%d/%m/%Y')}</h4>", unsafe_allow_html=True)
 
-    if len(terremotos) != 0:
-        terremotos = terremotos[terremotos['Tipo'] == visualizacaoTremor]
+    if len(terremotos):
         st.plotly_chart(mapa(data=terremotos, visualizacaoPeriodo=visualizacaoPeriodo), use_container_width=True)
     else:
         st.warning('Não existem dados para os filtros aplicados')

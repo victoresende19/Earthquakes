@@ -3,10 +3,11 @@ from datetime import datetime
 import pandas as pd
 import json
 import urllib.request
+from urllib.parse import quote
 
 
 @st.cache_data(show_spinner="Consultando dados...", max_entries=500)
-def coleta_dados(startTime: datetime, endTime: datetime, magnitude_desejada: int):
+def coleta_dados(startTime: datetime, endTime: datetime, magnitude_desejada: int, tipo_evento: str = None):
     """
     Description
     -----------
@@ -28,7 +29,16 @@ def coleta_dados(startTime: datetime, endTime: datetime, magnitude_desejada: int
     Dados de terremotos em formato JSON no intervalo solicitado.
     """
 
-    url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={startTime}&endtime={endTime}&minmagnitude={magnitude_desejada}&limit=20000'
+    formatted_start_time = quote(startTime.strftime('%Y-%m-%d'))
+    formatted_end_time = quote(endTime.strftime('%Y-%m-%d'))
+    formatted_magnitude = quote(str(magnitude_desejada))
+
+    url = f'https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime={formatted_start_time}&endtime={formatted_end_time}&minmagnitude={formatted_magnitude}&limit=20000'
+
+    if tipo_evento and tipo_evento != 'Terremoto':
+        formatted_tipo_evento = quote(tipo_eventos[tipo_evento])
+        url += f'&eventtype={formatted_tipo_evento}'
+
     response = urllib.request.urlopen(url).read()
     data = json.loads(response.decode('utf-8'))
     return data
@@ -99,29 +109,32 @@ def manipula_dados(data: dict):
     terremotos['Ano'] = pd.to_datetime(terremotos['Timestamp']).dt.year
     terremotos = terremotos.sort_values(by=['Timestamp'], ascending=False)
     terremotos['Timestamp'] = terremotos['Timestamp'].dt.strftime('%m/%d/%Y - %H:%M')
-    terremotos['Tipo'] = terremotos['Tipo'].map(tipo_eventos)
+
+    # Inverta o dicionário para mapear de inglês para português
+    tipo_eventos_inverse = {v: k for k, v in tipo_eventos.items()}
+    terremotos['Tipo'] = terremotos['Tipo'].replace(tipo_eventos_inverse)
 
     return terremotos
 
 
 tipo_eventos = {
-    'earthquake': 'Terremoto',
-    'quarry blast': 'Explosão de pedreira',
-    'nuclear explosion': 'Explosão Nuclear',
-    'other event': 'Outro evento',
-    'explosion': 'Explosão',
-    'mine collapse': 'Colapso de mina',
-    'chemical explosion': 'Explosão química',
-    'rock burst': 'Explosão de rochas',
-    'sonic boom': 'Estrondo sônico',
-    'ice quake': 'Tremor de gelo',
-    'rock slide': 'Deslizamento de rochas',
-    'mining explosion': 'Explosão de mineração',
-    'landslide': 'Deslizamento de terra',
-    'acoustic noise': 'Ruído acústico',
-    'not reported': 'Não relatado',
-    'experimental explosion': 'Explosão experimental',
-    'collapse': 'Colapso',
-    'induced or triggered event': 'Evento induzido ou desencadeado',
-    'volcanic eruption': 'Erupção vulcânica'
+    'Terremoto': 'earthquake', 
+    'Explosão de pedreira': 'quarry blast', 
+    'Explosão Nuclear': 'nuclear explosion', 
+    'Outro evento': 'other event', 
+    'Explosão': 'explosion', 
+    'Colapso de mina': 'mine collapse', 
+    'Explosão química': 'chemical explosion', 
+    'Explosão de rochas': 'rock burst', 
+    'Estrondo sônico': 'sonic boom', 
+    'Tremor de gelo': 'ice quake',
+    'Deslizamento de rochas': 'rock slide', 
+    'Explosão de mineração': 'mining explosion', 
+    'Deslizamento de terra': 'landslide', 
+    'Ruído acústico': 'acoustic noise', 
+    'Não relatado': 'not reported', 
+    'Explosão experimental': 'experimental explosion', 
+    'Colapso': 'collapse', 
+    'Evento induzido ou desencadeado': 'induced or triggered event', 
+    'Erupção vulcânica': 'volcanic eruption'
 }
