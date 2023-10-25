@@ -52,7 +52,7 @@ def mapa(data: DataFrame, visualizacaoPeriodo: str,  projecoes: list[str] = None
     # Personalizando o tooltip
     mapa.update_traces(
         hovertemplate='<br>'.join([
-            'Timestamp: %{customdata[0]}',
+            'Data e hora: %{customdata[0]}',
             'Latitude: %{customdata[1]}',
             'Longitude: %{customdata[2]}',
             'Magnitude: %{customdata[3]}'
