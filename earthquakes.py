@@ -14,7 +14,7 @@ mapa_sismos, predict, doc = st.tabs(["Mapa", "Predição magnitude", "Documenta�
 with mapa_sismos:
     st.markdown("<h5 style='text-align: left;'>Caso deseje, aplique os filtros:</h5>",unsafe_allow_html=True)
 
-    with st.form(key='my_form_map'):
+    with st.form(key='my_form_map', clear_on_submit=True):
         with st.expander("Filtros"):
             col1, col2 = st.columns(2)
 
