@@ -120,7 +120,8 @@ def manipula_dados(data: dict):
 tipo_eventos = {
     'Terremoto': 'earthquake', 
     'Explosão de pedreira': 'quarry blast', 
-    'Explosão Nuclear': 'nuclear explosion', 
+    'Explosão Nuclear': 'nuclear explosion',
+    'Erupção vulcânica': 'volcanic eruption',
     'Outro evento': 'other event', 
     'Explosão': 'explosion', 
     'Colapso de mina': 'mine collapse', 
@@ -136,5 +137,4 @@ tipo_eventos = {
     'Explosão experimental': 'experimental explosion', 
     'Colapso': 'collapse', 
     'Evento induzido ou desencadeado': 'induced or triggered event', 
-    'Erupção vulcânica': 'volcanic eruption'
 }

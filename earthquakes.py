@@ -22,7 +22,7 @@ with mapa_sismos:
                 startTime = st.date_input("Data inicial (ano/mês/dia):", datetime.datetime.now(pytz.timezone('America/Sao_Paulo')))
                 visualizacaoPeriodo = st.selectbox('Visualização por ano:', ('Não', 'Sim'))
 
-            magMinima = 4
+            magMinima = 3
             magnitudeUsuario = st.slider('Magnitude mínima:', magMinima, 10, 5)
 
             with col2:
