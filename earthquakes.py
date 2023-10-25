@@ -33,14 +33,14 @@ with mapa_sismos:
         terremotos = manipula_dados(data)
         submit_button = st.form_submit_button(label='Aplicar filtros')
 
-    st.markdown(f"<h4 style='text-align: center; font-size:16px'>Terremotos ocorridos na data de {startTime.strftime('%d/%m/%Y')} a {endTime.strftime('%d/%m/%Y')}</h4>", unsafe_allow_html=True)
+    st.markdown(f"<h4 style='text-align: center; font-size:16px'>Foram encontrados {len(terremotos)} terremotos na data de {startTime.strftime('%d/%m/%Y')} a {endTime.strftime('%d/%m/%Y')}</h4>", unsafe_allow_html=True)
 
     if len(terremotos):
         st.plotly_chart(mapa(data=terremotos, visualizacaoPeriodo=visualizacaoPeriodo), use_container_width=True)
     else:
         st.warning('Não existem dados para os filtros aplicados')
 
-    st.markdown(f"<h4 style='text-align: center; font-size:16px'>Quantidade de terremotos: {terremotos.shape[0]}</h4>", unsafe_allow_html=True)
+    # st.markdown(f"<h4 style='text-align: center; font-size:16px'>Quantidade de terremotos: {terremotos.shape[0]}</h4>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; font-size:16px; color:red'><strong>Observação (1):</strong> Apesar do range de dados escolhido, a aplicação considera apenas os 20.000 primeiros dados referente a data de início.</p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; font-size:16px; color:red'> <strong>Observação (2):</strong> A quantidade de dados pesquisados pode afetar no tempo de execução da visualização.</p>", unsafe_allow_html=True)
 
