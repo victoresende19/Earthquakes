@@ -34,7 +34,7 @@ with mapa_sismos:
         submit_button = st.form_submit_button(label='Aplicar filtros')
 
     if len(terremotos) == 20000 and startTime.strftime('%m/%d/%Y - %H:%M') != terremotos['Timestamp'].iloc[-1]:
-        st.markdown(f"<h4 style='text-align: center;'>Devido a quantidade máxima de pesquisa de 20.0000 terremotos ter sido atingida, foram encontrados sismos na data de {startTime.strftime('%d/%m/%Y')} até {terremotos['Timestamp'].iloc[-1]} </h4>", unsafe_allow_html=True)
+        st.markdown(f"<h5 style='text-align: center;'>Devido a quantidade máxima de pesquisa de 20.0000 terremotos ter sido atingida, foram encontrados sismos na data de {startTime.strftime('%d/%m/%Y')} até {terremotos['Timestamp'].iloc[-1]} </h5>", unsafe_allow_html=True)
     else:
         st.markdown(f"<h4 style='text-align: center;'>Foram encontrados {len(terremotos)} terremotos na data de {startTime.strftime('%d/%m/%Y')} a {endTime.strftime('%d/%m/%Y')}</h4>", unsafe_allow_html=True)
     
