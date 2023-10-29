@@ -16,7 +16,7 @@ st.markdown(
     .css-9q76rl, .css-1z8u7d{
         background-color: #033940;
     }
-    .st-bp, .st-br, st.css-9q76rl, .css-pav9s7{
+    .st-bp, .st-br, st.css-9q76rl, .css-pav9s7, .css-9rexhf{
         background: #0000
     }
     p{
@@ -30,12 +30,12 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown("<h1 style='text-align: left; font-size:52px'>SismoMap</h1>",unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: left; font-size:52px; color: white'>SismoMap</h1>",unsafe_allow_html=True)
 st.markdown("<p style='text-align: left; font-size:16px'>Descubra, pesquise e preveja terremotos de forma fácil, exclusiva e personalizada!</p><br><br>", unsafe_allow_html=True)
 mapa_sismos, predict, doc = st.tabs(["Mapa", "Predição magnitude", "Documentação"])
 
 with mapa_sismos:
-    st.markdown("<h5 style='text-align: left;'><br>Caso deseje, aplique os filtros:</h5>", unsafe_allow_html=True)
+    st.markdown("<h5 style='text-align: left;  color: white;'><br>Caso deseje, aplique os filtros:</h5>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
 
@@ -68,7 +68,7 @@ with mapa_sismos:
     if len(terremotos) == 20000 and startTime.strftime('%m/%d/%Y - %H:%M') != terremotos['Timestamp'].iloc[-1]:
         st.markdown(f"<br><h5 style='text-align: center;'>Devido a quantidade máxima de pesquisa de 20.0000 terremotos ter sido atingida, foram encontrados sismos na data de {startTime.strftime('%d/%m/%Y')} até {terremotos['Timestamp'].iloc[-1]} </h5>", unsafe_allow_html=True)
     else:
-        st.markdown(f"<br><h4 style='text-align: center;'>Foram encontrados {len(terremotos)} terremotos na data de {startTime.strftime('%d/%m/%Y')} a {endTime.strftime('%d/%m/%Y')}</h4>", unsafe_allow_html=True)
+        st.markdown(f"<br><h4 style='text-align: center; color: white'>Foram encontrados {len(terremotos)} terremotos na data de {startTime.strftime('%d/%m/%Y')} a {endTime.strftime('%d/%m/%Y')}</h4>", unsafe_allow_html=True)
     
     if len(terremotos):
         st.plotly_chart(mapa(data=terremotos, visualizacaoPeriodo=visualizacaoPeriodo), use_container_width=True)
@@ -88,7 +88,7 @@ with predict:
     st.markdown("<p style='text-align: justify; color: white;'>Como exposto por Geller (1997), terremotos são desastres praticamente impossíveis de se prever dada sua natureza incerta. Entretanto, Mondol (2021) apresenta um estudo sobre variáveis e métodos para previsão da magnitude de um terremoto. Nesse último, o algoritmo de floresta aleatória obteve resultados interessantes quando alimentado por dados sobre profundidade dos terremotos.  </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: justify; color: white;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se <strong>floresta aleatória</strong>, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
     st.write('')
-    st.markdown("<h5 style='text-align: left;'>Caso deseje, aplique os filtros:</h5>", unsafe_allow_html=True)
+    st.markdown("<h5 style='text-align: left; color: white'>Caso deseje, aplique os filtros:</h5>", unsafe_allow_html=True)
     with st.form(key='my_form_predict'):
         col1, col2, col3 = st.columns(3)
 
