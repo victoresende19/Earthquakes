@@ -28,7 +28,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 st.markdown("<h1 style='text-align: left; font-size:52px'>SismoMap</h1>",unsafe_allow_html=True)
-st.markdown("<p style='text-align: left; font-size:16px'>Descubra, pesquise e preveja terremotos com nossa plataforma exclusiva!</p><br><br>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: left; font-size:16px'>Descubra, pesquise e preveja terremotos de forma exclusiva e personalizada!</p><br><br>", unsafe_allow_html=True)
 mapa_sismos, predict, doc = st.tabs(["Mapa", "Predição magnitude", "Documentação"])
 
 with mapa_sismos:
@@ -117,14 +117,15 @@ with doc:
     doc1, doc2, doc3 = st.columns(3)
     with doc1:
         st.markdown("""<p align='justify';'> Os fenômenos naturais que se originam por meio de tremores terrestre ocorrem desde o início do planeta. Desde então a humanidade sofria com as consequências de tais fenômenos, dos quais são capazes de causar mortes, mudar paisagens e diversos outros fatores. Entretanto, os terremotos começaram a ser analisados cientificamente apenas após o terremoto que devastou Lisboa, em 1755. Considerado um dos terremotos mais fortes que atingiu a Europa, e segundo os sismólogos modernos, o tremor foi capaz de atingir uma magnitude de 9 na escala Richter, do qual gerou um tsunami e por fim tirou a vida de certa de 100 mil pessoas. Uma das consequências desse forte terremoto foi o interesse da ciência sobre a sismologia, ciência da qual era pouco explorada até a época. </p>""", unsafe_allow_html=True)
-        st.markdown("""<p align='justify'; font-size:10px '><br><br><br>Documentação oficial e código-fonte do observatório sismológico:  <a href='https://github.com/victoresende19/earthquakes'>Observatório sismológico repositório</a> </p>""", unsafe_allow_html=True)
-
+        
     with doc2:
         st.markdown("""<p align='justify';'> A sismologia visa o estudo dos sismos (ou terremotos) e, genericamente, dos diversos movimentos que ocorrem na superfície do globo terrestre. Esta ciência busca conhecer e determinar em que circunstâncias ocorrem os sismos naturais assim como suas causas, de modo a prevê-los em tempo e espaço. Portanto, por meio dessa ciência, é possível analisar dados gerados de diversos observatórios sismológicos e sensores sismógrafos a fim de entender os tremores terrestres, as causas e impactos diretos na sociedade, havendo até a possibilidade de prevê-los em alguns casos dependendo dos dados gerados. Dessa forma, o observatório tenta auxiliar na visualização e predição da magnitude dos sismos atráves de modelos estatísticos e robustos métodos computacionais.</p>""", unsafe_allow_html=True)
 
     with doc3:
         st.markdown("""<p align='justify';'>A referência mundial em relação ao monitoramento global de tremores terrestre acontece por meio do Serviço Geológico dos Estados Unidos (USGS). Dessa forma, no site é disponibilizado uma API pública para a consulta dos dados, do qual pode ser acessada por diversas formas. Portanto, o observatório sismológico faz a consulta dos dados de acordo com os filtros aplicado. Vale ressaltar que existe um limite de 20.000 dados por requisição, caso os filtros excedam esse limite, são coletados apenas os primeiros 20.000 sismos referente as datas escolhidas. Para a melhor visualização e coleta dos dados referentes aos terremotos, foi fixado o limite de terremotos com magnitude mínima igual a 4 graus na escala Ritcher, não sendo possível visualizar sismos menores.</p>""", unsafe_allow_html=True)
     
+    st.markdown("""<p align='justify'; font-size:10px '><br><br><br>Documentação oficial e código-fonte do observatório sismológico:  <a href='https://github.com/victoresende19/earthquakes'>Observatório sismológico repositório</a> </p>""", unsafe_allow_html=True)
+
 st.markdown("""
 <div>
     <a href = "https://github.com/victoresende19" style='color: white;'> &copy2023 &nbsp-&nbspVictor Augusto Souza Resende </a>
