@@ -127,7 +127,10 @@ with doc:
     with doc3:
         st.markdown("""<p align='justify';'>A referência mundial em relação ao monitoramento global de tremores terrestre acontece por meio do Serviço Geológico dos Estados Unidos (USGS). Dessa forma, no site é disponibilizado uma API pública para a consulta dos dados, do qual pode ser acessada por diversas formas. Portanto, o observatório sismológico faz a consulta dos dados de acordo com os filtros aplicado. Vale ressaltar que existe um limite de 20.000 dados por requisição, caso os filtros excedam esse limite, são coletados apenas os primeiros 20.000 sismos referente as datas escolhidas. Para a melhor visualização e coleta dos dados referentes aos terremotos, foi fixado o limite de terremotos com magnitude mínima igual a 4 graus na escala Ritcher, não sendo possível visualizar sismos menores.</p>""", unsafe_allow_html=True)
     
-    st.markdown("""<p align='justify'; font-size:10px '><br><br><br>Documentação oficial e código-fonte do observatório sismológico - <a href='https://github.com/victoresende19/earthquakes style='color: white;'>Observatório sismológico repositório</a> </p>""", unsafe_allow_html=True)
+    st.markdown("""
+    <div align='justify'><br><br><br> 
+        <a href='https://github.com/victoresende19/earthquakes style='color: white;'>Documentação&nbspoficial&nbspe&nbspcódigo-fonte</a> 
+    </div>""", unsafe_allow_html=True)
 
 st.markdown("""
 <div>
