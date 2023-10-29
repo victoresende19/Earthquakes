@@ -31,7 +31,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 st.markdown("<h1 style='text-align: left; font-size:52px'>SismoMap</h1>",unsafe_allow_html=True)
-st.markdown("<p style='text-align: left; font-size:16px'>Descubra, pesquise e preveja terremotos de forma exclusiva e personalizada!</p><br><br>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: left; font-size:16px'>Descubra, pesquise e preveja terremotos de forma fácil, exclusiva e personalizada!</p><br><br>", unsafe_allow_html=True)
 mapa_sismos, predict, doc = st.tabs(["Mapa", "Predição magnitude", "Documentação"])
 
 with mapa_sismos:
