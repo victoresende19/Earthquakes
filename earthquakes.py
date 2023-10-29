@@ -23,6 +23,9 @@ st.markdown(
         font-size: 20px !important;
         color: #fff
     }
+    a {
+        text-decoration: none;
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -105,7 +108,7 @@ with predict:
     previsao = previsao(latitude, longitude, profundidade)
     st.markdown(f"<h3 style='text-align: center; color: black;'>{round(previsao[0], 2)} graus na escala Ritcher </h3>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: justify; color: white;'>A métrica utilizada para a avaliação da floresta aleatória foi o R², ou coeficiente de determinação, do qual demonstra quão explicativo o modelo é, variando entre 0 a 1. Como consta na documentação do projeto, o R² referente ao conjunto de dados utilizado como treinamento chegou a 0.72. Além disso, a métrica MAPE foi de 0.11, o que significa dizer que a precisão do modelo é cerca de 89% nas respectivas previsões.</p>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: justify; color: white;'><br><br><strong>Referências</strong> </p>",unsafe_allow_html=True)
+    st.markdown("<p style='text-align: justify; color: #02292e;'><br><br><strong>Referências</strong> </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: justify;'><a href='http://essay.utwente.nl/87313/' style='color: #02292e'>[1] Manaswi Mondol. Analysis and prediction of earthquakes using different machine learning techniques. B.S. thesis, University of Twente, 2021.</a> </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: justify;'><a href='https://www.scec.org/publication/404' style='color: #02292e'>[2] Robert J Geller, David D Jackson, Yan Y Kagan, and Francesco Mulargia. Earthquakes cannot be predicted. Science, 275(5306):1616–1616, 1997</a> </p>", unsafe_allow_html=True)
 
