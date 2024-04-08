@@ -46,7 +46,7 @@ def mapa(data: DataFrame, visualizacaoPeriodo: str,  projecoes: list[str] = None
                              mapbox_style="open-street-map",
                              animation_frame=(None if visualizacaoPeriodo == 'Não' else 'Ano'),
                              custom_data=["Timestamp", "Latitude", "Longitude", "Magnitude", "Ano"],
-                             center=dict(lon=150))
+                             center=dict(lon=180))
     mapa.update_layout(coloraxis_colorbar=dict(orientation='h', y=1, xanchor='center', yanchor='bottom', tickfont=dict(color='white'), title_font=dict(color='white')))
     mapa.update_layout({
         'paper_bgcolor': 'rgba(0, 0, 0, 0)',

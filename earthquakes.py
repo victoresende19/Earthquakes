@@ -48,17 +48,17 @@ with mapa_sismos:
                 col1, col2 = st.columns(2)
 
                 with col1:
-                    startTime = st.date_input("Data inicial (ano/mês/dia):", datetime.datetime.now(pytz.timezone('America/Sao_Paulo')))
+                    startTime = st.date_input("Data inicial (ano/mês/dia):", datetime.datetime.now(pytz.timezone('America/Sao_Paulo')) - datetime.timedelta(weeks=4))
                     visualizacaoPeriodo = st.selectbox('Visualização por ano:', ('Não', 'Sim'))
 
                 magMinima = 3
-                magnitudeUsuario = st.slider('Magnitude mínima:', magMinima, 10, 5)
+                magnitudeUsuario = st.slider('Magnitude mínima:', magMinima, 10, 4)
 
                 with col2:
-                    endTime = st.date_input("Data final (ano/mês/dia):", datetime.date(2022, 1, 1), datetime.date(1960, 1, 1))
+                    endTime = st.date_input("Data final (ano/mês/dia):", datetime.datetime.now(pytz.timezone('America/Sao_Paulo')) )
                     visualizacaoTremor = st.selectbox('Tipo de tremor:', list(tipo_eventos.keys()))
 
-            data = coleta_dados(endTime, startTime, magnitudeUsuario, visualizacaoTremor)
+            data = coleta_dados(startTime, endTime, magnitudeUsuario, visualizacaoTremor)
             terremotos = manipula_dados(data)
             submit_button = st.form_submit_button(label='Encontrar terremotos 💥')
     
@@ -81,9 +81,6 @@ with mapa_sismos:
 
 
 with predict:
-    startTime = datetime.date(2021, 1, 1)
-    endTime = datetime.date(2023, 1, 1)
-
     # st.markdown("<h1 style='text-align: center; color: white;'>Previsão magnitude de terremotos</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: justify; color: white;'>Como exposto por Geller (1997), terremotos são desastres praticamente impossíveis de se prever dada sua natureza incerta. Entretanto, Mondol (2021) apresenta um estudo sobre variáveis e métodos para previsão da magnitude de um terremoto. Nesse último, o algoritmo de floresta aleatória obteve resultados interessantes quando alimentado por dados sobre profundidade dos terremotos.  </p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: justify; color: white;'>Portanto, ao verificar a correlação e a literatura, decidiu-se que as variáveis de longitude e profundidade do epicentro (em km) são as que possuem melhor resultado na predição de um tremor. Dessa forma, o modelo utilizado para tal chama-se <strong>floresta aleatória</strong>, um método não-linear do qual utiliza um agregado de árvores de decisão para assim prever a magnitude do terremoto. Abaixo estão disponibilizados os filtros citado para fazer a previsão da magnitude do terremoto.</p>", unsafe_allow_html=True)
